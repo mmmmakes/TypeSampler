@@ -200,7 +200,7 @@ const FontRow = ({ font, accent, appBg, removeFont, getFontVariant, setFontVaria
     <div className="flex justify-between items-start mb-1">
       <div className="flex flex-wrap items-center gap-2 max-w-[280px]">
         <span className="text-[11px] font-medium truncate">{font.name}</span>
-        <span className="text-[7px] font-black tracking-tighter px-1 border leading-tight" style={{ borderColor: `${accent}99`, color: `${accent}dd` }}>
+        <span className="text-[7px] font-black tracking-tighter px-1 border leading-none inline-flex items-center h-4" style={{ borderColor: `${accent}99`, color: `${accent}dd` }}>
           {font.source || "SYSTEM"}
         </span>
       </div>
@@ -211,7 +211,7 @@ const FontRow = ({ font, accent, appBg, removeFont, getFontVariant, setFontVaria
     {font.hasVariants && (
       <div className="grid grid-cols-2 gap-1 mt-1">
         <select
-          className="bg-transparent text-[10px] border px-1 py-1 outline-none cursor-pointer"
+          className="bg-transparent text-[10px] border px-1 py-1 outline-none cursor-pointer appearance-none rounded-none"
           style={{ borderColor: `${accent}55` }}
           value={getFontVariant(font.id).weight}
           onChange={(e) => setFontVariants(v => ({ ...v, [font.id]: { ...getFontVariant(font.id), weight: Number(e.target.value) } }))}
@@ -219,7 +219,7 @@ const FontRow = ({ font, accent, appBg, removeFont, getFontVariant, setFontVaria
           {font.availableWeights.map(w => <option key={w} value={w}>{w}</option>)}
         </select>
         <select
-          className="bg-transparent text-[10px] border px-1 py-1 outline-none cursor-pointer"
+          className="bg-transparent text-[10px] border px-1 py-1 outline-none cursor-pointer appearance-none rounded-none"
           style={{ borderColor: `${accent}55` }}
           value={getFontVariant(font.id).style}
           onChange={(e) => setFontVariants(v => ({ ...v, [font.id]: { ...getFontVariant(font.id), style: e.target.value } }))}
@@ -550,7 +550,41 @@ export default function App() {
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: ${accent}77; border-radius: 10px; }
-        input[type="range"] { accent-color: ${accent}; cursor: pointer; }
+        input[type="range"] {
+          -webkit-appearance: none;
+          appearance: none;
+          background: transparent;
+          cursor: pointer;
+          width: 100%;
+          height: 16px;
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+          height: 4px;
+          background: ${accent}55;
+          border-radius: 2px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 14px;
+          height: 14px;
+          background: ${appBg};
+          border: 1px solid ${accent};
+          border-radius: 50%;
+          margin-top: -5px;
+        }
+        input[type="range"]::-moz-range-track {
+          height: 4px;
+          background: ${accent}55;
+          border-radius: 2px;
+        }
+        input[type="range"]::-moz-range-thumb {
+          width: 14px;
+          height: 14px;
+          background: ${appBg};
+          border: 1px solid ${accent};
+          border-radius: 50%;
+        }
         input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
         input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 0; }
 
@@ -944,7 +978,7 @@ export default function App() {
                         <button
                           key={val}
                           onClick={() => handleRate(font.id, val)}
-                          className="relative w-5 h-5 flex items-center justify-center text-[9px] font-bold transition-all hover:scale-110"
+                          className="relative w-5 h-5 flex items-center justify-center text-[9px] font-bold leading-none transition-all hover:scale-110"
                         >
                           {currentRating === val && (
                             <motion.div
