@@ -324,6 +324,7 @@ export default function App() {
   const [fontVariants, setFontVariants] = useState({});
   const [fontBrowserSearch, setFontBrowserSearch] = useState("");
   const [fontRatings, setFontRatings] = useState({});
+  const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
   const [activeRatingFilters, setActiveRatingFilters] = useState(new Set([1, 2, 3, 4, 5, null]));
   const toggleRatingFilter = (value) => {
     setActiveRatingFilters(prev => {
@@ -544,7 +545,7 @@ export default function App() {
     minHeight: `100px`
   };
   return (
-    <div className="flex h-screen w-full overflow-hidden" style={{ backgroundColor: appBg, color: accent }}>
+    <div className="md:flex h-screen w-full md:overflow-hidden relative" style={{ backgroundColor: appBg, color: accent }}>
       <style>{`
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -603,7 +604,23 @@ export default function App() {
         }
       `}</style>
       {/* Sidebar */}
-      <aside className="w-[390px] h-full border-r flex flex-col overflow-y-auto color-transition" style={{ borderColor: `${accent}66` }}>
+      <aside
+        className={`
+          fixed inset-x-0 bottom-0 z-40 max-h-[85vh] rounded-t-2xl shadow-2xl flex flex-col overflow-y-auto color-transition
+          ${bottomSheetOpen ? "translate-y-0" : "translate-y-[calc(100%_-_56px)]"}
+          transition-transform duration-300 ease-out
+          md:static md:translate-y-0 md:transition-none md:max-h-none md:rounded-none md:shadow-none md:w-[390px] md:h-full md:border-r
+        `}
+        style={{ backgroundColor: appBg, borderColor: `${accent}66` }}
+      >
+        <button
+          onClick={() => setBottomSheetOpen(!bottomSheetOpen)}
+          className="md:hidden flex items-center justify-center h-[56px] flex-shrink-0 sticky top-0 z-10"
+          style={{ backgroundColor: appBg }}
+          aria-label={bottomSheetOpen ? "Close settings" : "Open settings"}
+        >
+          <span className="w-12 h-1 rounded-full" style={{ backgroundColor: accent, opacity: 0.5 }} />
+        </button>
         <div className="p-6 border-b color-transition" style={{ borderColor: `${accent}66` }}>
           <h1 aria-label="Type Sampler" style={{ color: accent, fontFamily: "'Cutive', serif" }}>
             <span className="flex">
@@ -904,7 +921,7 @@ export default function App() {
         </div>
       </aside>
       {/* Main Preview Area */}
-      <section className="flex-1 overflow-y-auto p-12 color-transition relative" style={{ backgroundColor: appBg }}>
+      <section className="flex-1 h-screen md:h-auto overflow-y-auto p-4 md:p-12 pb-[72px] md:pb-12 color-transition relative" style={{ backgroundColor: appBg }}>
         <div ref={samplesRef} className="max-w-4xl mx-auto space-y-8 pb-32">
           <AnimatePresence mode="popLayout">
             {visibleFonts.map((font, idx) => {
