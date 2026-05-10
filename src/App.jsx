@@ -513,7 +513,16 @@ export default function App() {
 
         @media print {
           @page { margin: 0.5in; size: auto; }
-          body { background: white !important; }
+          html, body {
+            height: auto !important;
+            overflow: visible !important;
+            background: white !important;
+          }
+          #root, #root > div {
+            height: auto !important;
+            overflow: visible !important;
+            display: block !important;
+          }
           aside { display: none !important; }
           section {
             padding: 0 !important;
