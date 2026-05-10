@@ -763,7 +763,6 @@ export default function App() {
                     style={{ borderColor: `${accent}77`, color: accent, "--tw-ring-color": accent }}
                   />
                 </div>
-                <label className="text-[8px] uppercase tracking-[0.2em] opacity-70 block mb-1">Secondary Font</label>
                 {secondaryFont ? (
                   <div className="flex gap-2">
                     <button
