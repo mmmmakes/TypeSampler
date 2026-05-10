@@ -678,21 +678,21 @@ export default function App() {
                 </div>
                 <label className="text-[8px] uppercase tracking-[0.2em] opacity-70 block mb-1">Secondary Font</label>
                 {secondaryFont ? (
-                  <div className="flex items-stretch gap-2">
+                  <div className="flex gap-2">
                     <button
                       onClick={() => {
                         setAddFontsContext("secondary");
                         setAddFontsTab(fonts.length > 0 ? "loaded" : "google");
                         setShowAddFonts(true);
                       }}
-                      className="flex-1 py-3 text-[10px] font-bold uppercase transition-all flex items-center justify-center gap-2 truncate"
+                      className="flex-1 h-10 text-[10px] font-bold uppercase transition-all flex items-center justify-center gap-2 truncate"
                       style={{ backgroundColor: accent, color: appBg }}
                     >
                       {secondaryFont.name}
                     </button>
                     <button
                       onClick={() => setSecondaryFontId(null)}
-                      className="aspect-square flex items-center justify-center opacity-80 hover:opacity-100 transition-all"
+                      className="w-10 h-10 flex items-center justify-center opacity-80 hover:opacity-100 transition-all flex-shrink-0"
                       style={{ backgroundColor: accent, color: appBg }}
                       aria-label="Clear secondary font"
                     >
@@ -706,7 +706,7 @@ export default function App() {
                       setAddFontsTab(fonts.length > 0 ? "loaded" : "google");
                       setShowAddFonts(true);
                     }}
-                    className="w-full py-3 text-[10px] font-bold uppercase transition-all flex items-center justify-center gap-2"
+                    className="w-full h-10 text-[10px] font-bold uppercase transition-all flex items-center justify-center gap-2"
                     style={{ backgroundColor: accent, color: appBg }}
                   >
                     Select a Font
@@ -930,12 +930,11 @@ export default function App() {
                         style={{
                           borderColor: isSelected ? `${accent}44` : `${accent}66`,
                           opacity: isSelected ? 0.4 : 1,
-                          backgroundColor: isSelected ? "transparent" : `${accent}38`,
-                          fontFamily: font.family
+                          backgroundColor: isSelected ? "transparent" : `${accent}38`
                         }}
                       >
                         <div>
-                          <div className="text-sm font-medium mb-1 truncate">{font.name}</div>
+                          <div className="text-sm font-medium mb-1 truncate" style={{ fontFamily: font.family }}>{font.name}</div>
                           <div className="text-[8px] uppercase tracking-[0.2em] opacity-70">{weightCount} weight{weightCount === 1 ? "" : "s"}</div>
                         </div>
                       </button>
@@ -1022,12 +1021,11 @@ export default function App() {
                               style={{
                                 borderColor: isAdded ? `${accent}44` : `${accent}66`,
                                 opacity: isAdded ? 0.4 : 1,
-                                backgroundColor: isAdded ? "transparent" : `${accent}38`,
-                                fontFamily: `'${f.family.replace(/'/g, "\\'")}', sans-serif`
+                                backgroundColor: isAdded ? "transparent" : `${accent}38`
                               }}
                             >
                               <div>
-                                <div className="text-sm font-medium mb-1 truncate">{f.family}</div>
+                                <div className="text-sm font-medium mb-1 truncate" style={{ fontFamily: `'${f.family.replace(/'/g, "\\'")}', sans-serif` }}>{f.family}</div>
                                 <div className="text-[8px] uppercase tracking-[0.2em] opacity-70">{f.availableWeights.length} weight{f.availableWeights.length === 1 ? "" : "s"}</div>
                               </div>
                             </button>
