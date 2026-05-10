@@ -556,14 +556,14 @@ export default function App() {
       <aside className="w-[390px] h-full border-r flex flex-col overflow-y-auto color-transition" style={{ borderColor: `${accent}66` }}>
         <div className="p-6 border-b color-transition" style={{ borderColor: `${accent}66` }}>
           <h1 aria-label="Type Sampler" style={{ color: accent, fontFamily: "'Cutive', serif" }}>
-            <span className="flex gap-1 mb-1">
+            <span className="flex">
               {["T", "Y", "P", "E"].map((c, i) => (
-                <span key={i} className="w-10 h-10 rounded-full border-2 flex items-center justify-center text-xl leading-none" style={{ borderColor: accent }}>{c}</span>
+                <span key={i} className="w-11 h-11 rounded-full border-2 flex items-center justify-center text-2xl" style={{ borderColor: accent, lineHeight: 1, paddingTop: "2px" }}>{c}</span>
               ))}
             </span>
-            <span className="flex gap-1">
+            <span className="flex -mt-px">
               {["S", "A", "M", "P", "L", "E", "R"].map((c, i) => (
-                <span key={i} className="w-10 h-10 rounded-full border-2 flex items-center justify-center text-xl leading-none" style={{ borderColor: accent }}>{c}</span>
+                <span key={i} className="w-11 h-11 rounded-full border-2 flex items-center justify-center text-2xl" style={{ borderColor: accent, lineHeight: 1, paddingTop: "2px" }}>{c}</span>
               ))}
             </span>
           </h1>
