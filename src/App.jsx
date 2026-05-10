@@ -294,7 +294,7 @@ export default function App() {
         ::-webkit-scrollbar-thumb { background: ${accent}44; border-radius: 10px; }
         input[type="range"] { accent-color: ${accent}; cursor: pointer; }
         input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-        input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 4px; }
+        input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 2px; }
 
         .color-transition {
             transition: background-color 0.15s ease-out, color 0.15s ease-out, border-color 0.15s ease-out;
@@ -499,7 +499,18 @@ export default function App() {
           </div>
           {/* Color Section */}
           <div className="pt-8 border-t space-y-6 color-transition" style={{ borderColor: `${accent}33` }}>
-            <label className="text-[10px] uppercase tracking-widest font-bold block mb-1">Color</label>
+            <div className="flex justify-between items-end mb-1">
+              <label className="text-[10px] uppercase tracking-widest font-bold">Color</label>
+              <button
+                onClick={() => {
+                  setDisplayTextColor("#202020");
+                  setDisplayBgColor("#ece9e2");
+                }}
+                className="text-[10px] underline hover:opacity-70 lowercase"
+              >
+                reset
+              </button>
+            </div>
             <div className="flex gap-2">
               <button onClick={() => setInvert(!invert)} className="flex-1 py-2 text-[10px] border uppercase transition-all" style={{ backgroundColor: invert ? accent : "transparent", color: invert ? appBg : accent, borderColor: accent }}>Invert</button>
               <button onClick={() => setMonochrome(!monochrome)} className="flex-1 py-2 text-[10px] border uppercase transition-all" style={{ backgroundColor: monochrome ? accent : "transparent", color: monochrome ? appBg : accent, borderColor: accent }}>Mono</button>
@@ -509,14 +520,14 @@ export default function App() {
               <div className="flex flex-col">
                 <span className="text-[10px] uppercase tracking-widest font-bold opacity-60 mb-2">Text</span>
                 <div className="flex gap-1.5 flex-wrap">
-                  <input type="color" value={displayTextColor} onChange={e => setDisplayTextColor(e.target.value)} onBlur={e => addColorToHistory(e.target.value, setTextColorHistory)} className="w-14 h-7 outline-none cursor-pointer border rounded-sm" style={{ borderColor: `${accent}44` }} />
+                  <input type="color" value={displayTextColor} onChange={e => setDisplayTextColor(e.target.value)} onBlur={e => addColorToHistory(e.target.value, setTextColorHistory)} className="w-14 h-7 outline-none cursor-pointer border rounded-sm" style={{ borderColor: `${accent}22` }} />
                   {textColorHistory.map((c, i) => <button key={i} onClick={() => setDisplayTextColor(c)} className="w-7 h-7 rounded-sm border color-transition" style={{ backgroundColor: c, borderColor: `${accent}22` }} />)}
                 </div>
               </div>
               <div className="flex flex-col">
                 <span className="text-[10px] uppercase tracking-widest font-bold opacity-60 mb-2">Background</span>
                 <div className="flex gap-1.5 flex-wrap">
-                  <input type="color" value={displayBgColor} onChange={e => setDisplayBgColor(e.target.value)} onBlur={e => addColorToHistory(e.target.value, setBgColorHistory)} className="w-14 h-7 outline-none cursor-pointer border rounded-sm" style={{ borderColor: `${accent}44` }} />
+                  <input type="color" value={displayBgColor} onChange={e => setDisplayBgColor(e.target.value)} onBlur={e => addColorToHistory(e.target.value, setBgColorHistory)} className="w-14 h-7 outline-none cursor-pointer border rounded-sm" style={{ borderColor: `${accent}22` }} />
                   {bgColorHistory.map((c, i) => <button key={i} onClick={() => setDisplayBgColor(c)} className="w-7 h-7 rounded-sm border color-transition" style={{ backgroundColor: c, borderColor: `${accent}22` }} />)}
                 </div>
               </div>
@@ -528,7 +539,7 @@ export default function App() {
             <div className="flex flex-col gap-1">
               <button
                 onClick={handlePrintExport}
-                className="w-full py-4 text-[10px] border flex items-center justify-center uppercase font-bold hover:bg-white/5 transition-colors"
+                className="w-full py-4 text-[10px] border flex items-center justify-center uppercase hover:bg-white/5 transition-colors"
                 style={{ borderColor: accent }}
               >
                 Export to PDF
@@ -557,28 +568,26 @@ export default function App() {
                   className="font-card border overflow-hidden shadow-sm color-transition group/card"
                   style={{ borderColor: `${accent}33`, backgroundColor: "transparent" }}
                 >
-                  <div className="px-4 py-2 border-b flex justify-between items-center bg-black/5 color-transition" style={{ borderColor: `${accent}22` }}>
-                    <div className="flex items-center gap-3">
-                      <span className="text-[10px] font-black tracking-widest uppercase opacity-70" style={{ color: accent }}>{font.name}</span>
-                      <div className="utility-bar flex items-center gap-1 opacity-40 hover:opacity-100 transition-opacity" style={{ color: accent }}>
-                        {[1, 2, 3, 4, 5].map((val) => (
-                          <button
-                            key={val}
-                            onClick={() => handleRate(font.id, val)}
-                            className="relative w-5 h-5 flex items-center justify-center text-[9px] font-bold transition-all hover:scale-110"
-                          >
-                            {currentRating === val && (
-                              <motion.div
-                                layoutId={`rating-circle-${font.id}`}
-                                className="absolute inset-0.5 rounded-full border border-current pointer-events-none"
-                                initial={false}
-                                transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                              />
-                            )}
-                            <span className={currentRating === val ? "opacity-100" : "opacity-60"}>{val}</span>
-                          </button>
-                        ))}
-                      </div>
+                  <div className="relative px-4 py-2 border-b flex justify-between items-center bg-black/5 color-transition" style={{ borderColor: `${accent}22` }}>
+                    <span className="text-[10px] font-black tracking-widest uppercase opacity-70" style={{ color: accent }}>{font.name}</span>
+                    <div className="utility-bar absolute left-1/2 -translate-x-1/2 flex items-center gap-1 opacity-40 hover:opacity-100 transition-opacity" style={{ color: accent }}>
+                      {[1, 2, 3, 4, 5].map((val) => (
+                        <button
+                          key={val}
+                          onClick={() => handleRate(font.id, val)}
+                          className="relative w-5 h-5 flex items-center justify-center text-[9px] font-bold transition-all hover:scale-110"
+                        >
+                          {currentRating === val && (
+                            <motion.div
+                              layoutId={`rating-circle-${font.id}`}
+                              className="absolute inset-0.5 rounded-full border border-current pointer-events-none"
+                              initial={false}
+                              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                            />
+                          )}
+                          <span className={currentRating === val ? "opacity-100" : "opacity-60"}>{val}</span>
+                        </button>
+                      ))}
                     </div>
                     <div className="text-[10px] font-mono opacity-30 tracking-widest">#{String(idx + 1).padStart(2, '0')}</div>
                   </div>
