@@ -153,6 +153,57 @@ const EditableValue = ({ value, suffix = "", onSave, accentColor }) => {
     </button>
   );
 };
+const TypographyControls = ({
+  title,
+  fontSize, setFontSize,
+  letterSpacing, setLetterSpacing,
+  leading, setLeading,
+  selectedTransform, setSelectedTransform,
+  align, setAlign,
+  onReset,
+  accent, appBg
+}) => (
+  <div className="space-y-4">
+    <div className="flex justify-between items-end mb-1">
+      <span className="text-[10px] uppercase tracking-widest font-bold block">{title}</span>
+      <button
+        onClick={onReset}
+        className="text-[10px] underline hover:opacity-90 lowercase"
+      >
+        reset
+      </button>
+    </div>
+
+    <div className="flex justify-between text-[11px] mb-1">
+      <span>Size</span>
+      <EditableValue value={fontSize} suffix="px" onSave={setFontSize} accentColor={accent} />
+    </div>
+    <input type="range" min="8" max="240" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} className="w-full" />
+
+    <div className="flex justify-between text-[11px] mb-1">
+      <span>Spacing</span>
+      <EditableValue value={letterSpacing} suffix="px" onSave={setLetterSpacing} accentColor={accent} />
+    </div>
+    <input type="range" min="-10" max="100" value={letterSpacing} onChange={e => setLetterSpacing(Number(e.target.value))} className="w-full" />
+
+    <div className="flex justify-between text-[11px] mb-1">
+      <span>Leading</span>
+      <EditableValue value={leading} onSave={setLeading} accentColor={accent} />
+    </div>
+    <input type="range" min="0.5" max="3" step="0.01" value={leading} onChange={e => setLeading(Number(e.target.value))} className="w-full" />
+
+    <div className="grid grid-cols-2 gap-1 mt-4">
+      {["as-typed", "title", "upper", "lower"].map(t => (
+        <button key={t} onClick={() => setSelectedTransform(t)} className="text-[10px] uppercase border py-2 transition-all" style={{ backgroundColor: selectedTransform === t ? accent : "transparent", color: selectedTransform === t ? appBg : accent, borderColor: accent }}>{t.replace("-", " ")}</button>
+      ))}
+    </div>
+    <div className="flex gap-1">
+      {["left", "center", "right"].map(a => (
+        <button key={a} onClick={() => setAlign(a)} className="flex-1 border py-2 text-[10px] uppercase transition-all" style={{ backgroundColor: align === a ? accent : "transparent", color: align === a ? appBg : accent, borderColor: accent }}>{a}</button>
+      ))}
+    </div>
+  </div>
+);
 export default function App() {
   const [sample, setSample] = useState(INITIAL_STATE.sample);
   const [fontSize, setFontSize] = useState(INITIAL_STATE.fontSize);
@@ -160,6 +211,14 @@ export default function App() {
   const [leading, setLeading] = useState(INITIAL_STATE.leading);
   const [align, setAlign] = useState(INITIAL_STATE.align);
   const [selectedTransform, setSelectedTransform] = useState(INITIAL_STATE.selectedTransform);
+  const [secondaryEnabled, setSecondaryEnabled] = useState(false);
+  const [secondarySample, setSecondarySample] = useState(INITIAL_STATE.sample);
+  const [secondaryFontId, setSecondaryFontId] = useState(null);
+  const [secondaryFontSize, setSecondaryFontSize] = useState(INITIAL_STATE.fontSize);
+  const [secondaryLetterSpacing, setSecondaryLetterSpacing] = useState(INITIAL_STATE.letterSpacing);
+  const [secondaryLeading, setSecondaryLeading] = useState(INITIAL_STATE.leading);
+  const [secondaryAlign, setSecondaryAlign] = useState(INITIAL_STATE.align);
+  const [secondaryTransform, setSecondaryTransform] = useState(INITIAL_STATE.selectedTransform);
   const [invert, setInvert] = useState(false);
   const [monochrome, setMonochrome] = useState(false);
   const [googleFontInput, setGoogleFontInput] = useState("");
@@ -190,6 +249,13 @@ export default function App() {
     if (selectedTransform === "lower") return sample.toLowerCase();
     return sample;
   }, [sample, selectedTransform]);
+  const transformedSecondaryText = useMemo(() => {
+    if (secondaryTransform === "upper") return secondarySample.toUpperCase();
+    if (secondaryTransform === "title") return titleCaseText(secondarySample);
+    if (secondaryTransform === "lower") return secondarySample.toLowerCase();
+    return secondarySample;
+  }, [secondarySample, secondaryTransform]);
+  const secondaryFont = fonts.find(f => f.id === secondaryFontId);
   const addGoogleFont = async (fontName) => {
     const cleaned = fontName.trim();
     if (!cleaned || fonts.some(f => f.name.toLowerCase() === cleaned.toLowerCase())) return;
@@ -253,12 +319,20 @@ export default function App() {
     setAlign(INITIAL_STATE.align);
     setSelectedTransform(INITIAL_STATE.selectedTransform);
   };
+  const resetSecondaryTypography = () => {
+    setSecondaryFontSize(INITIAL_STATE.fontSize);
+    setSecondaryLetterSpacing(INITIAL_STATE.letterSpacing);
+    setSecondaryLeading(INITIAL_STATE.leading);
+    setSecondaryAlign(INITIAL_STATE.align);
+    setSecondaryTransform(INITIAL_STATE.selectedTransform);
+  };
   const getFontVariant = (id) => fontVariants[id] || DEFAULT_VARIANT;
   const removeFont = (id) => {
     const fontToRemove = fonts.find(f => f.id === id);
     if (fontToRemove) {
       setMisfits(prev => [fontToRemove, ...prev]);
       setFonts(prev => prev.filter(f => f.id !== id));
+      if (secondaryFontId === id) setSecondaryFontId(null);
     }
   };
   const restoreFont = (id) => {
@@ -459,44 +533,87 @@ export default function App() {
         <div className="p-6 space-y-8 pb-12">
           {/* Typography Controls */}
           <div className="space-y-4">
-            <div className="flex justify-between items-end mb-1">
-              <span className="text-[10px] uppercase tracking-widest font-bold block">Typography</span>
-              <button
-                onClick={resetTypography}
-                className="text-[10px] underline hover:opacity-90 lowercase"
-              >
-                reset
-              </button>
-            </div>
-
-            <div className="flex justify-between text-[11px] mb-1">
-              <span>Size</span>
-              <EditableValue value={fontSize} suffix="px" onSave={setFontSize} accentColor={accent} />
-            </div>
-            <input type="range" min="8" max="240" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} className="w-full" />
-
-            <div className="flex justify-between text-[11px] mb-1">
-              <span>Spacing</span>
-              <EditableValue value={letterSpacing} suffix="px" onSave={setLetterSpacing} accentColor={accent} />
-            </div>
-            <input type="range" min="-10" max="100" value={letterSpacing} onChange={e => setLetterSpacing(Number(e.target.value))} className="w-full" />
-
-            <div className="flex justify-between text-[11px] mb-1">
-              <span>Leading</span>
-              <EditableValue value={leading} onSave={setLeading} accentColor={accent} />
-            </div>
-            <input type="range" min="0.5" max="3" step="0.01" value={leading} onChange={e => setLeading(Number(e.target.value))} className="w-full" />
-            <div className="grid grid-cols-2 gap-1 mt-4">
-               {["as-typed", "title", "upper", "lower"].map(t => (
-                 <button key={t} onClick={() => setSelectedTransform(t)} className="text-[10px] uppercase border py-2 transition-all" style={{ backgroundColor: selectedTransform === t ? accent : "transparent", color: selectedTransform === t ? appBg : accent, borderColor: accent }}>{t.replace("-", " ")}</button>
-               ))}
-            </div>
-            <div className="flex gap-1">
-               {["left", "center", "right"].map(a => (
-                 <button key={a} onClick={() => setAlign(a)} className="flex-1 border py-2 text-[10px] uppercase transition-all" style={{ backgroundColor: align === a ? accent : "transparent", color: align === a ? appBg : accent, borderColor: accent }}>{a}</button>
-               ))}
-            </div>
+            <TypographyControls
+              title="Typography"
+              fontSize={fontSize} setFontSize={setFontSize}
+              letterSpacing={letterSpacing} setLetterSpacing={setLetterSpacing}
+              leading={leading} setLeading={setLeading}
+              selectedTransform={selectedTransform} setSelectedTransform={setSelectedTransform}
+              align={align} setAlign={setAlign}
+              onReset={resetTypography}
+              accent={accent} appBg={appBg}
+            />
+            <button
+              onClick={() => setSecondaryEnabled(!secondaryEnabled)}
+              className="w-full py-2 text-[10px] border uppercase transition-all"
+              style={{ backgroundColor: secondaryEnabled ? accent : "transparent", color: secondaryEnabled ? appBg : accent, borderColor: accent }}
+            >
+              Secondary Type
+            </button>
           </div>
+          {/* Secondary Font Picker */}
+          {secondaryEnabled && (
+            <div className="pt-8 border-t space-y-4 color-transition" style={{ borderColor: `${accent}66` }}>
+              <div>
+                <div className="flex justify-between items-end mb-2">
+                  <span className="text-[10px] uppercase tracking-widest font-bold">Secondary Sample Text</span>
+                  <button
+                    onClick={() => setSecondarySample(PANGRAMS[Math.floor(Math.random() * PANGRAMS.length)])}
+                    className="text-[10px] underline hover:opacity-90 lowercase"
+                  >
+                    pangram me
+                  </button>
+                </div>
+                <textarea
+                  value={secondarySample}
+                  onChange={(e) => setSecondarySample(e.target.value)}
+                  className="w-full h-24 bg-transparent border p-3 text-sm resize-none outline-none rounded-none transition-all focus:ring-1"
+                  style={{ borderColor: `${accent}77`, color: accent, "--tw-ring-color": accent }}
+                />
+              </div>
+              <label className="text-[10px] uppercase tracking-widest font-bold block mb-1">Secondary Font</label>
+              <div className="space-y-1 max-h-72 overflow-y-auto pr-2 border" style={{ borderColor: `${accent}55`, padding: "8px" }}>
+                {fonts.map(font => {
+                  const isSelected = secondaryFontId === font.id;
+                  return (
+                    <button
+                      key={font.id}
+                      onClick={() => setSecondaryFontId(isSelected ? null : font.id)}
+                      className="w-full flex items-center gap-2 px-2 py-2 text-left text-[11px] border transition-all mb-1 last:mb-0"
+                      style={{
+                        borderColor: isSelected ? accent : `${accent}55`,
+                        backgroundColor: isSelected ? accent : "transparent",
+                        color: isSelected ? appBg : accent
+                      }}
+                    >
+                      <span className="truncate flex-1">{font.name}</span>
+                      <span className="text-[7px] font-black tracking-tighter px-1 border leading-tight" style={{ borderColor: isSelected ? appBg : `${accent}99`, color: isSelected ? appBg : `${accent}dd` }}>
+                        {font.source || "SYSTEM"}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              {!secondaryFont && (
+                <p className="text-[10px] opacity-70 leading-tight">Select a font above to pair with your primary specimens.</p>
+              )}
+            </div>
+          )}
+          {/* Secondary Typography Controls */}
+          {secondaryEnabled && (
+            <div className="pt-8 border-t color-transition" style={{ borderColor: `${accent}66` }}>
+              <TypographyControls
+                title="Secondary Typography"
+                fontSize={secondaryFontSize} setFontSize={setSecondaryFontSize}
+                letterSpacing={secondaryLetterSpacing} setLetterSpacing={setSecondaryLetterSpacing}
+                leading={secondaryLeading} setLeading={setSecondaryLeading}
+                selectedTransform={secondaryTransform} setSelectedTransform={setSecondaryTransform}
+                align={secondaryAlign} setAlign={setSecondaryAlign}
+                onReset={resetSecondaryTypography}
+                accent={accent} appBg={appBg}
+              />
+            </div>
+          )}
           {/* Color Section */}
           <div className="pt-8 border-t space-y-6 color-transition" style={{ borderColor: `${accent}66` }}>
             <div className="flex justify-between items-end mb-1">
@@ -611,6 +728,28 @@ export default function App() {
                       {transformedText || "..." }
                     </div>
                   </div>
+                  {secondaryEnabled && secondaryFont && (
+                    <div
+                      className="flex items-center specimen-text border-t"
+                      style={{
+                        ...staticPadding,
+                        borderColor: `${accent}55`,
+                        fontFamily: secondaryFont.family,
+                        fontSize: `${secondaryFontSize}px`,
+                        fontWeight: getFontVariant(secondaryFont.id).weight,
+                        fontStyle: getFontVariant(secondaryFont.id).style,
+                        letterSpacing: `${secondaryLetterSpacing}px`,
+                        lineHeight: secondaryLeading,
+                        textAlign: secondaryAlign,
+                        color: textColor,
+                        backgroundColor: sampleBg
+                      }}
+                    >
+                      <div className="w-full break-words">
+                        {transformedSecondaryText || "..." }
+                      </div>
+                    </div>
+                  )}
                 </motion.div>
               );
             })}
