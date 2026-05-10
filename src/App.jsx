@@ -545,7 +545,7 @@ export default function App() {
     minHeight: `100px`
   };
   return (
-    <div className="md:flex h-screen w-full md:overflow-hidden relative" style={{ backgroundColor: appBg, color: accent }}>
+    <div className="flex flex-col md:flex-row h-screen w-full overflow-hidden relative" style={{ backgroundColor: appBg, color: accent }}>
       <style>{`
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -637,6 +637,34 @@ export default function App() {
           .utility-bar, .modal-overlay { display: none !important; }
         }
       `}</style>
+      {/* Mobile title bar */}
+      <div className="md:hidden flex-shrink-0 p-6 border-b" style={{ borderColor: `${accent}66` }}>
+        <h1 aria-label="Type Sampler" style={{ color: accent, fontFamily: "'Cutive', serif" }}>
+          <span className="flex gap-px">
+            {[
+              { char: "T", href: "https://abcdinamo.com/" },
+              { char: "Y", href: "https://lineto.com/typefaces" },
+              { char: "P", href: "https://pangrampangram.com/" },
+              { char: "E", href: "https://commercialtype.com/catalog" }
+            ].map((l, i) => (
+              <TitleLetter key={i} char={l.char} href={l.href} accent={accent} appBg={appBg} />
+            ))}
+          </span>
+          <span className="flex gap-px mt-px">
+            {[
+              { char: "S", href: "https://klim.co.nz/fonts/" },
+              { char: "A", href: "https://okaytype.com/" },
+              { char: "M", href: "https://www.hvdfonts.com/fonts" },
+              { char: "P", href: "https://a2-type.co.uk/" },
+              { char: "L", href: "https://processtypefoundry.com/fonts/" },
+              { char: "E", href: "https://www.typotheque.com/fonts" },
+              { char: "R", href: "https://www.grillitype.com/" }
+            ].map((l, i) => (
+              <TitleLetter key={i} char={l.char} href={l.href} accent={accent} appBg={appBg} />
+            ))}
+          </span>
+        </h1>
+      </div>
       {/* Sidebar */}
       <aside
         className={`
@@ -649,13 +677,13 @@ export default function App() {
       >
         <button
           onClick={() => setBottomSheetOpen(!bottomSheetOpen)}
-          className="md:hidden flex items-center justify-center h-[56px] flex-shrink-0 sticky top-0 z-10"
-          style={{ backgroundColor: appBg }}
+          className="md:hidden flex items-center justify-center h-[56px] flex-shrink-0 sticky top-0 z-10 text-[10px] uppercase tracking-widest font-bold"
+          style={{ backgroundColor: accent, color: appBg }}
           aria-label={bottomSheetOpen ? "Close settings" : "Open settings"}
         >
-          <span className="w-12 h-1 rounded-full" style={{ backgroundColor: accent, opacity: 0.5 }} />
+          {bottomSheetOpen ? "Done" : "Adjust Fonts"}
         </button>
-        <div className="p-6 border-b color-transition" style={{ borderColor: `${accent}66` }}>
+        <div className="hidden md:block p-6 border-b color-transition" style={{ borderColor: `${accent}66` }}>
           <h1 aria-label="Type Sampler" style={{ color: accent, fontFamily: "'Cutive', serif" }}>
             <span className="flex gap-px">
               {[
@@ -955,7 +983,7 @@ export default function App() {
         </div>
       </aside>
       {/* Main Preview Area */}
-      <section className="flex-1 h-screen md:h-auto overflow-y-auto p-4 md:p-12 pb-[72px] md:pb-12 color-transition relative" style={{ backgroundColor: appBg }}>
+      <section className="flex-1 overflow-y-auto p-4 md:p-12 pb-[72px] md:pb-12 color-transition relative" style={{ backgroundColor: appBg }}>
         <div ref={samplesRef} className="max-w-4xl mx-auto space-y-8 pb-32">
           <AnimatePresence mode="popLayout">
             {visibleFonts.map((font, idx) => {
