@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { RotateCcw, X } from "lucide-react";
+import { motion, AnimatePresence, Reorder, useDragControls } from "framer-motion";
+import { RotateCcw, X, GripVertical } from "lucide-react";
 /**
  * Type Sampler Tool
  * Focuses on professional typography specimens with a clean PDF export workflow.
@@ -151,6 +151,59 @@ const EditableValue = ({ value, suffix = "", onSave, accentColor }) => {
     >
       {value}{suffix}
     </button>
+  );
+};
+const FontRow = ({ font, accent, appBg, removeFont, getFontVariant, setFontVariants }) => {
+  const dragControls = useDragControls();
+  return (
+    <Reorder.Item
+      value={font}
+      dragListener={false}
+      dragControls={dragControls}
+      className="flex items-start gap-2 border-b last:border-0 pb-3 mb-2 color-transition"
+      style={{ borderColor: `${accent}44`, backgroundColor: appBg }}
+    >
+      <button
+        onPointerDown={(e) => dragControls.start(e)}
+        className="opacity-50 hover:opacity-100 cursor-grab active:cursor-grabbing touch-none p-1 -ml-1 mt-0.5"
+        aria-label="Drag to reorder"
+      >
+        <GripVertical size={14} />
+      </button>
+      <div className="flex flex-col flex-1 min-w-0">
+        <div className="flex justify-between items-start mb-1">
+          <div className="flex flex-wrap items-center gap-2 max-w-[260px]">
+            <span className="text-[11px] font-medium truncate">{font.name}</span>
+            <span className="text-[7px] font-black tracking-tighter px-1 border leading-tight" style={{ borderColor: `${accent}99`, color: `${accent}dd` }}>
+              {font.source || "SYSTEM"}
+            </span>
+          </div>
+          <button onClick={() => removeFont(font.id)} className="opacity-60 hover:opacity-100 p-1 -mr-1">
+            <X size={12} />
+          </button>
+        </div>
+        {font.hasVariants && (
+          <div className="grid grid-cols-2 gap-1 mt-1">
+            <select
+              className="bg-transparent text-[10px] border px-1 py-1 outline-none"
+              style={{ borderColor: `${accent}55` }}
+              value={getFontVariant(font.id).weight}
+              onChange={(e) => setFontVariants(v => ({ ...v, [font.id]: { ...getFontVariant(font.id), weight: Number(e.target.value) } }))}
+            >
+              {font.availableWeights.map(w => <option key={w} value={w}>{w}</option>)}
+            </select>
+            <select
+              className="bg-transparent text-[10px] border px-1 py-1 outline-none"
+              style={{ borderColor: `${accent}55` }}
+              value={getFontVariant(font.id).style}
+              onChange={(e) => setFontVariants(v => ({ ...v, [font.id]: { ...getFontVariant(font.id), style: e.target.value } }))}
+            >
+              {font.availableStyles.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </div>
+        )}
+      </div>
+    </Reorder.Item>
   );
 };
 const TypographyControls = ({
@@ -496,43 +549,25 @@ export default function App() {
           <div className="space-y-6">
             <div>
               <label className="text-[8px] uppercase tracking-[0.2em] opacity-70 mb-3 block">Active Fonts</label>
-              <div className="space-y-1 max-h-72 overflow-y-auto pr-2 border" style={{ borderColor: `${accent}55`, padding: "8px" }}>
+              <Reorder.Group
+                axis="y"
+                values={fonts}
+                onReorder={setFonts}
+                className="space-y-1 max-h-72 overflow-y-auto pr-2 border"
+                style={{ borderColor: `${accent}55`, padding: "8px" }}
+              >
                 {fonts.map(font => (
-                  <div key={font.id} className="flex flex-col border-b last:border-0 pb-3 mb-2 color-transition" style={{ borderColor: `${accent}44` }}>
-                    <div className="flex justify-between items-start mb-1">
-                      <div className="flex flex-wrap items-center gap-2 max-w-[280px]">
-                        <span className="text-[11px] font-medium truncate">{font.name}</span>
-                        <span className="text-[7px] font-black tracking-tighter px-1 border leading-tight" style={{ borderColor: `${accent}99`, color: `${accent}dd` }}>
-                          {font.source || "SYSTEM"}
-                        </span>
-                      </div>
-                      <button onClick={() => removeFont(font.id)} className="opacity-60 hover:opacity-100 p-1 -mr-1">
-                        <X size={12} />
-                      </button>
-                    </div>
-                    {font.hasVariants && (
-                      <div className="grid grid-cols-2 gap-1 mt-1">
-                        <select
-                          className="bg-transparent text-[10px] border px-1 py-1 outline-none"
-                          style={{ borderColor: `${accent}55` }}
-                          value={getFontVariant(font.id).weight}
-                          onChange={(e) => setFontVariants(v => ({ ...v, [font.id]: { ...getFontVariant(font.id), weight: Number(e.target.value) } }))}
-                        >
-                          {font.availableWeights.map(w => <option key={w} value={w}>{w}</option>)}
-                        </select>
-                        <select
-                          className="bg-transparent text-[10px] border px-1 py-1 outline-none"
-                          style={{ borderColor: `${accent}55` }}
-                          value={getFontVariant(font.id).style}
-                          onChange={(e) => setFontVariants(v => ({ ...v, [font.id]: { ...getFontVariant(font.id), style: e.target.value } }))}
-                        >
-                          {font.availableStyles.map(s => <option key={s} value={s}>{s}</option>)}
-                        </select>
-                      </div>
-                    )}
-                  </div>
+                  <FontRow
+                    key={font.id}
+                    font={font}
+                    accent={accent}
+                    appBg={appBg}
+                    removeFont={removeFont}
+                    getFontVariant={getFontVariant}
+                    setFontVariants={setFontVariants}
+                  />
                 ))}
-              </div>
+              </Reorder.Group>
             </div>
             <AnimatePresence>
               {misfits.length > 0 && (
