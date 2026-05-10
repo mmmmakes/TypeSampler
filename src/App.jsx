@@ -1007,7 +1007,7 @@ export default function App() {
                         <button
                           key={val}
                           onClick={() => handleRate(font.id, val)}
-                          className="relative w-5 h-5 flex items-center justify-center text-[9px] font-bold leading-none transition-all hover:scale-110 pt-0.5"
+                          className="relative w-5 h-5 flex items-center justify-center text-[9px] font-bold leading-none transition-all hover:scale-110 max-md:pt-0.5"
                         >
                           {currentRating === val && (
                             <motion.div
@@ -1029,7 +1029,7 @@ export default function App() {
                     style={{
                       paddingTop: "36px",
                       paddingRight: "24px",
-                      paddingBottom: secondaryEnabled && secondaryFont ? 0 : "36px",
+                      paddingBottom: secondaryEnabled && secondaryFont ? "20px" : "36px",
                       paddingLeft: "24px",
                       minHeight: secondaryEnabled && secondaryFont ? 0 : "100px",
                       fontFamily: font.family,
@@ -1055,7 +1055,7 @@ export default function App() {
                         paddingRight: "24px",
                         paddingBottom: "36px",
                         paddingLeft: "24px",
-                        marginTop: "20px",
+                        marginTop: 0,
                         minHeight: 0,
                         fontFamily: secondaryFont.family,
                         fontSize: `${secondaryFontSize}px`,
