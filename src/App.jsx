@@ -153,6 +153,28 @@ const EditableValue = ({ value, suffix = "", onSave, accentColor }) => {
     </button>
   );
 };
+const TitleLetter = ({ char, accent, appBg }) => {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <motion.span
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      animate={{ y: hovered ? 2 : 0, scale: hovered ? 0.96 : 1 }}
+      transition={{ type: "spring", stiffness: 700, damping: 28 }}
+      className="w-11 h-11 rounded-full border-2 flex items-center justify-center text-2xl cursor-pointer select-none"
+      style={{
+        borderColor: accent,
+        backgroundColor: hovered ? accent : "transparent",
+        color: hovered ? appBg : accent,
+        lineHeight: 1,
+        paddingTop: "10px",
+        transition: "background-color 0.12s ease, color 0.12s ease"
+      }}
+    >
+      {char}
+    </motion.span>
+  );
+};
 const FontRow = ({ font, accent, appBg, removeFont, getFontVariant, setFontVariants }) => (
   <Reorder.Item
     value={font}
@@ -558,12 +580,12 @@ export default function App() {
           <h1 aria-label="Type Sampler" style={{ color: accent, fontFamily: "'Cutive', serif" }}>
             <span className="flex">
               {["T", "Y", "P", "E"].map((c, i) => (
-                <span key={i} className="w-11 h-11 rounded-full border-2 flex items-center justify-center text-2xl" style={{ borderColor: accent, lineHeight: 1, paddingTop: "10px" }}>{c}</span>
+                <TitleLetter key={i} char={c} accent={accent} appBg={appBg} />
               ))}
             </span>
             <span className="flex -mt-px">
               {["S", "A", "M", "P", "L", "E", "R"].map((c, i) => (
-                <span key={i} className="w-11 h-11 rounded-full border-2 flex items-center justify-center text-2xl" style={{ borderColor: accent, lineHeight: 1, paddingTop: "10px" }}>{c}</span>
+                <TitleLetter key={i} char={c} accent={accent} appBg={appBg} />
               ))}
             </span>
           </h1>
