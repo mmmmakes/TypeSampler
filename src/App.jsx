@@ -586,7 +586,7 @@ export default function App() {
         {/* Global Controls */}
         <div className="p-6 space-y-8 pb-12">
           {/* Typography Controls */}
-          <div className="space-y-4">
+          <div>
             <TypographyControls
               title="Typography"
               fontSize={fontSize} setFontSize={setFontSize}
@@ -597,77 +597,85 @@ export default function App() {
               onReset={resetTypography}
               accent={accent} appBg={appBg}
             />
-            <button
-              onClick={() => setSecondaryEnabled(!secondaryEnabled)}
-              className="w-full py-2 text-[10px] border uppercase transition-all"
-              style={{ backgroundColor: secondaryEnabled ? accent : "transparent", color: secondaryEnabled ? appBg : accent, borderColor: accent }}
-            >
-              Secondary Type
-            </button>
           </div>
-          {/* Secondary Font Picker */}
-          {secondaryEnabled && (
-            <div className="pt-8 border-t space-y-4 color-transition" style={{ borderColor: `${accent}66` }}>
-              <div>
-                <div className="flex justify-between items-end mb-2">
-                  <span className="text-[10px] uppercase tracking-widest font-bold">Secondary Sample Text</span>
-                  <button
-                    onClick={() => setSecondarySample(PANGRAMS[Math.floor(Math.random() * PANGRAMS.length)])}
-                    className="text-[10px] underline hover:opacity-90 lowercase"
-                  >
-                    pangram me
-                  </button>
-                </div>
-                <textarea
-                  value={secondarySample}
-                  onChange={(e) => setSecondarySample(e.target.value)}
-                  className="w-full h-24 bg-transparent border p-3 text-sm resize-none outline-none rounded-none transition-all focus:ring-1"
-                  style={{ borderColor: `${accent}77`, color: accent, "--tw-ring-color": accent }}
+          {/* Secondary Type Section */}
+          <div className="pt-8 border-t space-y-4 color-transition" style={{ borderColor: `${accent}66` }}>
+            <div className="flex justify-between items-center">
+              <label className="text-[10px] uppercase tracking-widest font-bold">Secondary Type</label>
+              <button
+                role="switch"
+                aria-checked={secondaryEnabled}
+                onClick={() => setSecondaryEnabled(!secondaryEnabled)}
+                className="relative w-9 h-5 rounded-full border transition-colors"
+                style={{ backgroundColor: secondaryEnabled ? accent : "transparent", borderColor: accent }}
+              >
+                <span
+                  className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full transition-all"
+                  style={{
+                    backgroundColor: secondaryEnabled ? appBg : accent,
+                    left: secondaryEnabled ? "calc(100% - 14px)" : "2px"
+                  }}
                 />
-              </div>
-              <label className="text-[10px] uppercase tracking-widest font-bold block mb-1">Secondary Font</label>
-              <div className="space-y-1 max-h-72 overflow-y-auto pr-2 border" style={{ borderColor: `${accent}55`, padding: "8px" }}>
-                {fonts.map(font => {
-                  const isSelected = secondaryFontId === font.id;
-                  return (
+              </button>
+            </div>
+            {secondaryEnabled && (
+              <>
+                <div>
+                  <div className="flex justify-between items-end mb-2">
+                    <span className="text-[10px] uppercase tracking-widest font-bold">Secondary Sample Text</span>
                     <button
-                      key={font.id}
-                      onClick={() => setSecondaryFontId(isSelected ? null : font.id)}
-                      className="w-full flex items-center gap-2 px-2 py-2 text-left text-[11px] border transition-all mb-1 last:mb-0"
-                      style={{
-                        borderColor: isSelected ? accent : `${accent}55`,
-                        backgroundColor: isSelected ? accent : "transparent",
-                        color: isSelected ? appBg : accent
-                      }}
+                      onClick={() => setSecondarySample(PANGRAMS[Math.floor(Math.random() * PANGRAMS.length)])}
+                      className="text-[10px] underline hover:opacity-90 lowercase"
                     >
-                      <span className="truncate flex-1">{font.name}</span>
-                      <span className="text-[7px] font-black tracking-tighter px-1 border leading-tight" style={{ borderColor: isSelected ? appBg : `${accent}99`, color: isSelected ? appBg : `${accent}dd` }}>
-                        {font.source || "SYSTEM"}
-                      </span>
+                      pangram me
                     </button>
-                  );
-                })}
-              </div>
-              {!secondaryFont && (
-                <p className="text-[10px] opacity-70 leading-tight">Select a font above to pair with your primary specimens.</p>
-              )}
-            </div>
-          )}
-          {/* Secondary Typography Controls */}
-          {secondaryEnabled && (
-            <div className="pt-8 border-t color-transition" style={{ borderColor: `${accent}66` }}>
-              <TypographyControls
-                title="Secondary Typography"
-                fontSize={secondaryFontSize} setFontSize={setSecondaryFontSize}
-                letterSpacing={secondaryLetterSpacing} setLetterSpacing={setSecondaryLetterSpacing}
-                leading={secondaryLeading} setLeading={setSecondaryLeading}
-                selectedTransform={secondaryTransform} setSelectedTransform={setSecondaryTransform}
-                align={secondaryAlign} setAlign={setSecondaryAlign}
-                onReset={resetSecondaryTypography}
-                accent={accent} appBg={appBg}
-              />
-            </div>
-          )}
+                  </div>
+                  <textarea
+                    value={secondarySample}
+                    onChange={(e) => setSecondarySample(e.target.value)}
+                    className="w-full h-24 bg-transparent border p-3 text-sm resize-none outline-none rounded-none transition-all focus:ring-1"
+                    style={{ borderColor: `${accent}77`, color: accent, "--tw-ring-color": accent }}
+                  />
+                </div>
+                <label className="text-[10px] uppercase tracking-widest font-bold block mb-1">Secondary Font</label>
+                <div className="space-y-1 max-h-72 overflow-y-auto pr-2 border" style={{ borderColor: `${accent}55`, padding: "8px" }}>
+                  {fonts.map(font => {
+                    const isSelected = secondaryFontId === font.id;
+                    return (
+                      <button
+                        key={font.id}
+                        onClick={() => setSecondaryFontId(isSelected ? null : font.id)}
+                        className="w-full flex items-center gap-2 px-2 py-2 text-left text-[11px] border transition-all mb-1 last:mb-0"
+                        style={{
+                          borderColor: isSelected ? accent : `${accent}55`,
+                          backgroundColor: isSelected ? accent : "transparent",
+                          color: isSelected ? appBg : accent
+                        }}
+                      >
+                        <span className="truncate flex-1">{font.name}</span>
+                        <span className="text-[7px] font-black tracking-tighter px-1 border leading-tight" style={{ borderColor: isSelected ? appBg : `${accent}99`, color: isSelected ? appBg : `${accent}dd` }}>
+                          {font.source || "SYSTEM"}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+                {!secondaryFont && (
+                  <p className="text-[10px] opacity-70 leading-tight">Select a font above to pair with your primary specimens.</p>
+                )}
+                <TypographyControls
+                  title="Secondary Typography"
+                  fontSize={secondaryFontSize} setFontSize={setSecondaryFontSize}
+                  letterSpacing={secondaryLetterSpacing} setLetterSpacing={setSecondaryLetterSpacing}
+                  leading={secondaryLeading} setLeading={setSecondaryLeading}
+                  selectedTransform={secondaryTransform} setSelectedTransform={setSecondaryTransform}
+                  align={secondaryAlign} setAlign={setSecondaryAlign}
+                  onReset={resetSecondaryTypography}
+                  accent={accent} appBg={appBg}
+                />
+              </>
+            )}
+          </div>
           {/* Color Section */}
           <div className="pt-8 border-t space-y-6 color-transition" style={{ borderColor: `${accent}66` }}>
             <div className="flex justify-between items-end mb-1">
