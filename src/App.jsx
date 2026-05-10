@@ -558,12 +558,12 @@ export default function App() {
           <h1 aria-label="Type Sampler" style={{ color: accent, fontFamily: "'Cutive', serif" }}>
             <span className="flex">
               {["T", "Y", "P", "E"].map((c, i) => (
-                <span key={i} className="w-11 h-11 rounded-full border-2 flex items-center justify-center text-2xl" style={{ borderColor: accent, lineHeight: 1, paddingTop: "2px" }}>{c}</span>
+                <span key={i} className="w-11 h-11 rounded-full border-2 flex items-center justify-center text-2xl" style={{ borderColor: accent, lineHeight: 1, paddingTop: "6px" }}>{c}</span>
               ))}
             </span>
             <span className="flex -mt-px">
               {["S", "A", "M", "P", "L", "E", "R"].map((c, i) => (
-                <span key={i} className="w-11 h-11 rounded-full border-2 flex items-center justify-center text-2xl" style={{ borderColor: accent, lineHeight: 1, paddingTop: "2px" }}>{c}</span>
+                <span key={i} className="w-11 h-11 rounded-full border-2 flex items-center justify-center text-2xl" style={{ borderColor: accent, lineHeight: 1, paddingTop: "6px" }}>{c}</span>
               ))}
             </span>
           </h1>
