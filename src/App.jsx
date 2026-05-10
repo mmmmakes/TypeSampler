@@ -221,9 +221,8 @@ export default function App() {
   const [secondaryTransform, setSecondaryTransform] = useState(INITIAL_STATE.selectedTransform);
   const [invert, setInvert] = useState(false);
   const [monochrome, setMonochrome] = useState(false);
-  const [googleFontInput, setGoogleFontInput] = useState("");
-  const [showFontBrowser, setShowFontBrowser] = useState(false);
-  const [showInstalledBrowser, setShowInstalledBrowser] = useState(false);
+  const [showAddFonts, setShowAddFonts] = useState(false);
+  const [addFontsTab, setAddFontsTab] = useState("google");
   const [installedFontsList, setInstalledFontsList] = useState(null);
   const [installedFontsSearch, setInstalledFontsSearch] = useState("");
   const [installedFontsError, setInstalledFontsError] = useState(null);
@@ -278,8 +277,7 @@ export default function App() {
       ...prev,
       { id, name: cleaned, family, source: "GOOGLE", status: "loading", hasVariants: availableWeights.length > 1 || availableStyles.length > 1, availableWeights, availableStyles }
     ]);
-    setGoogleFontInput("");
-    setShowFontBrowser(false);
+    setFontBrowserSearch("");
     if (document.fonts?.load) {
       try {
         await document.fonts.load(`400 24px '${cleaned}'`);
@@ -318,8 +316,7 @@ export default function App() {
     event.target.value = "";
   };
   const supportsLocalFonts = typeof window !== "undefined" && "queryLocalFonts" in window;
-  const openInstalledFontsBrowser = async () => {
-    setShowInstalledBrowser(true);
+  const loadInstalledFonts = async () => {
     if (installedFontsList) return;
     setInstalledFontsLoading(true);
     setInstalledFontsError(null);
@@ -487,43 +484,14 @@ export default function App() {
         </div>
         {/* Font Management */}
         <div className="p-6 border-b space-y-6 color-transition" style={{ borderColor: `${accent}66` }}>
-          <div>
-            <label className="text-[10px] uppercase tracking-widest font-bold mb-2 block">Google Fonts</label>
-            <div className="flex gap-1">
-              <input
-                value={googleFontInput}
-                onChange={(e) => setGoogleFontInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && addGoogleFont(googleFontInput)}
-                placeholder="Inter, Roboto, Syne..."
-                className="flex-1 bg-transparent border px-3 py-2 text-xs outline-none rounded-none"
-                style={{ borderColor: `${accent}77` }}
-              />
-              <button
-                onClick={() => setShowFontBrowser(true)}
-                className="px-4 py-2 text-sm border hover:bg-white/10 transition-colors"
-                style={{ borderColor: `${accent}77` }}
-              >
-                +
-              </button>
-            </div>
-          </div>
           <button
-            onClick={() => fileInputRef.current.click()}
+            onClick={() => { setAddFontsTab("google"); setShowAddFonts(true); }}
             className="w-full py-3 text-[10px] font-bold uppercase transition-all flex items-center justify-center gap-2"
             style={{ backgroundColor: accent, color: appBg }}
           >
-            Upload Local Fonts
+            Add Fonts
           </button>
           <input ref={fileInputRef} type="file" multiple accept=".ttf,.otf,.woff,.woff2" onChange={handleLocalFontUpload} className="hidden" />
-          {supportsLocalFonts && (
-            <button
-              onClick={openInstalledFontsBrowser}
-              className="w-full py-3 text-[10px] uppercase border transition-all flex items-center justify-center gap-2 hover:bg-white/5"
-              style={{ borderColor: accent, color: accent }}
-            >
-              Browse Installed Fonts
-            </button>
-          )}
           {/* Active Fonts List */}
           <div className="space-y-6">
             <div>
@@ -821,15 +789,15 @@ export default function App() {
           </AnimatePresence>
         </div>
       </section>
-      {/* Font Browser Modal */}
+      {/* Add Fonts Modal */}
       <AnimatePresence>
-        {showFontBrowser && (
+        {showAddFonts && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-8 bg-black/60 backdrop-blur-sm modal-overlay"
-            onClick={() => setShowFontBrowser(false)}
+            onClick={() => setShowAddFonts(false)}
           >
             <motion.div
               initial={{ scale: 0.95, y: 20 }}
@@ -839,118 +807,140 @@ export default function App() {
               style={{ backgroundColor: appBg, borderColor: `${accent}77` }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="p-6 border-b flex justify-between items-center color-transition" style={{ borderColor: `${accent}55` }}>
-                <div className="flex-1 mr-4">
-                  <h2 className="text-xl font-bold uppercase tracking-tight mb-4" style={{ color: accent }}>Browse Google Fonts</h2>
-                  <input
-                    autoFocus
-                    placeholder="Search fonts..."
-                    value={fontBrowserSearch}
-                    onChange={(e) => setFontBrowserSearch(e.target.value)}
-                    className="w-full bg-transparent border px-4 py-3 text-sm outline-none rounded-none"
-                    style={{ borderColor: `${accent}77`, color: accent }}
-                  />
-                </div>
-                <button onClick={() => setShowFontBrowser(false)} className="w-10 h-10 flex items-center justify-center text-2xl opacity-70 hover:opacity-100" style={{ color: accent }}>×</button>
+              <div className="px-6 pt-6 pb-0 flex justify-between items-start color-transition">
+                <h2 className="text-xl font-bold uppercase tracking-tight" style={{ color: accent }}>Add Fonts</h2>
+                <button onClick={() => setShowAddFonts(false)} className="w-10 h-10 flex items-center justify-center text-2xl opacity-70 hover:opacity-100 -mt-2 -mr-2" style={{ color: accent }}>×</button>
               </div>
-              <div className="flex-1 overflow-y-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {filteredBrowserFonts.map((f) => {
-                  const isAdded = fonts.some(font => font.name.toLowerCase() === f.toLowerCase());
-                  return (
-                    <button
-                      key={f}
-                      disabled={isAdded}
-                      onClick={() => addGoogleFont(f)}
-                      className="group p-4 border text-left transition-all hover:scale-[1.02] active:scale-[0.98] flex flex-col justify-between"
-                      style={{
-                        borderColor: isAdded ? `${accent}44` : `${accent}66`,
-                        opacity: isAdded ? 0.4 : 1,
-                        backgroundColor: isAdded ? "transparent" : `${accent}38`
+              <div className="flex border-b mt-4" style={{ borderColor: `${accent}55` }}>
+                {[
+                  { id: "google", label: "Google Fonts" },
+                  ...(supportsLocalFonts ? [{ id: "installed", label: "Installed" }] : []),
+                  { id: "upload", label: "Upload" }
+                ].map(tab => (
+                  <button
+                    key={tab.id}
+                    onClick={() => {
+                      setAddFontsTab(tab.id);
+                      if (tab.id === "installed") loadInstalledFonts();
+                    }}
+                    className="px-6 py-3 text-[10px] uppercase tracking-widest font-bold transition-colors"
+                    style={{
+                      color: addFontsTab === tab.id ? accent : `${accent}aa`,
+                      borderBottom: `2px solid ${addFontsTab === tab.id ? accent : "transparent"}`,
+                      marginBottom: "-1px"
+                    }}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+              {addFontsTab === "google" && (
+                <>
+                  <div className="px-6 pt-6">
+                    <input
+                      autoFocus
+                      placeholder="Search or type a Google Fonts name and press Enter..."
+                      value={fontBrowserSearch}
+                      onChange={(e) => setFontBrowserSearch(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && fontBrowserSearch.trim()) {
+                          addGoogleFont(fontBrowserSearch.trim());
+                        }
                       }}
-                    >
-                      <div>
-                        <div className="text-xs font-bold uppercase tracking-widest mb-1">{f}</div>
-                        <div className="text-[10px] opacity-60 uppercase">{FONT_VARIANT_PRESETS[f.toLowerCase()]?.weights.length || 1} weights</div>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      {/* Installed Fonts Browser Modal */}
-      <AnimatePresence>
-        {showInstalledBrowser && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-8 bg-black/60 backdrop-blur-sm modal-overlay"
-            onClick={() => setShowInstalledBrowser(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.95, y: 20 }}
-              className="w-full max-w-4xl h-full max-h-[80vh] overflow-hidden flex flex-col shadow-2xl border color-transition"
-              style={{ backgroundColor: appBg, borderColor: `${accent}77` }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="p-6 border-b flex justify-between items-center color-transition" style={{ borderColor: `${accent}55` }}>
-                <div className="flex-1 mr-4">
-                  <h2 className="text-xl font-bold uppercase tracking-tight mb-4" style={{ color: accent }}>Browse Installed Fonts</h2>
-                  <input
-                    autoFocus
-                    placeholder="Search fonts..."
-                    value={installedFontsSearch}
-                    onChange={(e) => setInstalledFontsSearch(e.target.value)}
-                    className="w-full bg-transparent border px-4 py-3 text-sm outline-none rounded-none"
-                    style={{ borderColor: `${accent}77`, color: accent }}
-                  />
-                </div>
-                <button onClick={() => setShowInstalledBrowser(false)} className="w-10 h-10 flex items-center justify-center text-2xl opacity-70 hover:opacity-100" style={{ color: accent }}>×</button>
-              </div>
-              <div className="flex-1 overflow-y-auto p-6">
-                {installedFontsLoading && (
-                  <p className="text-[12px] opacity-70 uppercase tracking-widest">Requesting font access...</p>
-                )}
-                {installedFontsError && (
-                  <p className="text-[12px] opacity-90" style={{ color: accent }}>
-                    {installedFontsError}
-                  </p>
-                )}
-                {!installedFontsLoading && !installedFontsError && installedFontsList && installedFontsList.length === 0 && (
-                  <p className="text-[12px] opacity-70">No installed fonts were shared. Reopen and grant access to see your library.</p>
-                )}
-                {!installedFontsLoading && !installedFontsError && filteredInstalledFonts.length > 0 && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {filteredInstalledFonts.map((f) => {
-                      const isAdded = fonts.some(font => font.name.toLowerCase() === f.family.toLowerCase());
+                      className="w-full bg-transparent border px-4 py-3 text-sm outline-none rounded-none"
+                      style={{ borderColor: `${accent}77`, color: accent }}
+                    />
+                  </div>
+                  <div className="flex-1 overflow-y-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {filteredBrowserFonts.map((f) => {
+                      const isAdded = fonts.some(font => font.name.toLowerCase() === f.toLowerCase());
                       return (
                         <button
-                          key={f.family}
+                          key={f}
                           disabled={isAdded}
-                          onClick={() => addInstalledFont(f)}
+                          onClick={() => addGoogleFont(f)}
                           className="group p-4 border text-left transition-all hover:scale-[1.02] active:scale-[0.98] flex flex-col justify-between"
                           style={{
                             borderColor: isAdded ? `${accent}44` : `${accent}66`,
                             opacity: isAdded ? 0.4 : 1,
-                            backgroundColor: isAdded ? "transparent" : `${accent}38`,
-                            fontFamily: `'${f.family.replace(/'/g, "\\'")}', sans-serif`
+                            backgroundColor: isAdded ? "transparent" : `${accent}38`
                           }}
                         >
                           <div>
-                            <div className="text-sm font-medium mb-1 truncate">{f.family}</div>
-                            <div className="text-[10px] opacity-60 uppercase tracking-widest">{f.availableWeights.length} weight{f.availableWeights.length === 1 ? "" : "s"}</div>
+                            <div className="text-xs font-bold uppercase tracking-widest mb-1">{f}</div>
+                            <div className="text-[10px] uppercase tracking-widest font-bold opacity-70">{FONT_VARIANT_PRESETS[f.toLowerCase()]?.weights.length || 1} weights</div>
                           </div>
                         </button>
                       );
                     })}
                   </div>
-                )}
-              </div>
+                </>
+              )}
+              {addFontsTab === "installed" && (
+                <>
+                  <div className="px-6 pt-6">
+                    <input
+                      autoFocus
+                      placeholder="Search installed fonts..."
+                      value={installedFontsSearch}
+                      onChange={(e) => setInstalledFontsSearch(e.target.value)}
+                      className="w-full bg-transparent border px-4 py-3 text-sm outline-none rounded-none"
+                      style={{ borderColor: `${accent}77`, color: accent }}
+                    />
+                  </div>
+                  <div className="flex-1 overflow-y-auto p-6">
+                    {installedFontsLoading && (
+                      <p className="text-[12px] opacity-70 uppercase tracking-widest">Requesting font access...</p>
+                    )}
+                    {installedFontsError && (
+                      <p className="text-[12px] opacity-90" style={{ color: accent }}>
+                        {installedFontsError}
+                      </p>
+                    )}
+                    {!installedFontsLoading && !installedFontsError && installedFontsList && installedFontsList.length === 0 && (
+                      <p className="text-[12px] opacity-70">No installed fonts were shared. Reopen and grant access to see your library.</p>
+                    )}
+                    {!installedFontsLoading && !installedFontsError && filteredInstalledFonts.length > 0 && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {filteredInstalledFonts.map((f) => {
+                          const isAdded = fonts.some(font => font.name.toLowerCase() === f.family.toLowerCase());
+                          return (
+                            <button
+                              key={f.family}
+                              disabled={isAdded}
+                              onClick={() => addInstalledFont(f)}
+                              className="group p-4 border text-left transition-all hover:scale-[1.02] active:scale-[0.98] flex flex-col justify-between"
+                              style={{
+                                borderColor: isAdded ? `${accent}44` : `${accent}66`,
+                                opacity: isAdded ? 0.4 : 1,
+                                backgroundColor: isAdded ? "transparent" : `${accent}38`,
+                                fontFamily: `'${f.family.replace(/'/g, "\\'")}', sans-serif`
+                              }}
+                            >
+                              <div>
+                                <div className="text-sm font-medium mb-1 truncate">{f.family}</div>
+                                <div className="text-[10px] uppercase tracking-widest font-bold opacity-70">{f.availableWeights.length} weight{f.availableWeights.length === 1 ? "" : "s"}</div>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+              {addFontsTab === "upload" && (
+                <div className="flex-1 p-6 flex items-center justify-center">
+                  <button
+                    onClick={() => fileInputRef.current.click()}
+                    className="border-2 border-dashed p-12 text-center hover:bg-white/5 transition-colors w-full max-w-md"
+                    style={{ borderColor: `${accent}77` }}
+                  >
+                    <div className="text-sm uppercase tracking-widest font-bold mb-2" style={{ color: accent }}>Choose Font Files</div>
+                    <div className="text-[10px] uppercase tracking-widest font-bold opacity-70">.ttf · .otf · .woff · .woff2</div>
+                  </button>
+                </div>
+              )}
             </motion.div>
           </motion.div>
         )}
