@@ -321,6 +321,14 @@ export default function App() {
   const [fontVariants, setFontVariants] = useState({});
   const [fontBrowserSearch, setFontBrowserSearch] = useState("");
   const [fontRatings, setFontRatings] = useState({});
+  const [activeRatingFilters, setActiveRatingFilters] = useState(new Set([1, 2, 3, 4, 5, null]));
+  const toggleRatingFilter = (value) => {
+    setActiveRatingFilters(prev => {
+      const next = new Set(prev);
+      if (next.has(value)) next.delete(value); else next.add(value);
+      return next;
+    });
+  };
 
   const fileInputRef = useRef(null);
   const samplesRef = useRef(null);
@@ -341,6 +349,10 @@ export default function App() {
     return secondarySample;
   }, [secondarySample, secondaryTransform]);
   const secondaryFont = fonts.find(f => f.id === secondaryFontId);
+  const visibleFonts = useMemo(
+    () => fonts.filter(font => activeRatingFilters.has(fontRatings[font.id] ?? null)),
+    [fonts, fontRatings, activeRatingFilters]
+  );
   const addGoogleFont = async (fontName) => {
     const cleaned = fontName.trim();
     if (!cleaned) return;
@@ -822,6 +834,41 @@ export default function App() {
               </div>
             </div>
           </div>
+        {/* Filter Section */}
+        <div className="p-6 border-b color-transition" style={{ borderColor: `${accent}66` }}>
+          <label className="text-[10px] uppercase tracking-widest font-bold block mb-3">Filter</label>
+          <div className="flex items-center gap-2">
+            {[1, 2, 3, 4, 5].map(val => {
+              const active = activeRatingFilters.has(val);
+              return (
+                <button
+                  key={val}
+                  onClick={() => toggleRatingFilter(val)}
+                  className="relative w-7 h-7 flex items-center justify-center text-[10px] font-bold transition-all hover:scale-110"
+                  style={{ color: accent }}
+                  aria-pressed={active}
+                >
+                  {active && (
+                    <span className="absolute inset-0 rounded-full border" style={{ borderColor: accent }} />
+                  )}
+                  <span className={active ? "opacity-100" : "opacity-40"}>{val}</span>
+                </button>
+              );
+            })}
+            <button
+              onClick={() => toggleRatingFilter(null)}
+              className="relative w-7 h-7 flex items-center justify-center text-[10px] font-bold transition-all hover:scale-110"
+              style={{ color: accent }}
+              aria-pressed={activeRatingFilters.has(null)}
+              aria-label="Unrated"
+            >
+              {activeRatingFilters.has(null) && (
+                <span className="absolute inset-0 rounded-full border" style={{ borderColor: accent }} />
+              )}
+              <span className={activeRatingFilters.has(null) ? "opacity-100" : "opacity-40"}>—</span>
+            </button>
+          </div>
+        </div>
         {/* Export / Print Section */}
         <div className="p-6 pb-12 space-y-4 color-transition">
             <label className="text-[10px] uppercase tracking-widest font-bold block mb-1">Export</label>
@@ -843,7 +890,7 @@ export default function App() {
       <section className="flex-1 overflow-y-auto p-12 color-transition relative" style={{ backgroundColor: appBg }}>
         <div ref={samplesRef} className="max-w-4xl mx-auto space-y-8 pb-32">
           <AnimatePresence mode="popLayout">
-            {fonts.map((font, idx) => {
+            {visibleFonts.map((font, idx) => {
               const variant = getFontVariant(font.id);
               const currentRating = fontRatings[font.id];
 
