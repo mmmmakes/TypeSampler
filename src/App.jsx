@@ -512,23 +512,29 @@ export default function App() {
         }
 
         @media print {
-          @page { margin: 1cm; size: auto; }
+          @page { margin: 0.5in; size: auto; }
           body { background: white !important; }
           aside { display: none !important; }
           section {
             padding: 0 !important;
             margin: 0 !important;
-            width: 100% !important;
-            max-width: 100% !important;
+            width: auto !important;
+            max-width: 6.5in !important;
             background: white !important;
             overflow: visible !important;
             height: auto !important;
+          }
+          section > div {
+            max-width: 6.5in !important;
+            margin: 0 !important;
+            padding: 0 !important;
           }
           .font-card {
             border: 1px solid #eee !important;
             page-break-inside: avoid;
             margin-bottom: 20px !important;
             box-shadow: none !important;
+            max-width: 6.5in !important;
           }
           .font-card div[style*="background-color"] {
             -webkit-print-color-adjust: exact;
