@@ -146,7 +146,7 @@ const EditableValue = ({ value, suffix = "", onSave, accentColor }) => {
   return (
     <button
       onClick={() => setIsEditing(true)}
-      className="text-[11px] hover:underline cursor-text transition-all opacity-80 hover:opacity-100"
+      className="text-[11px] hover:underline cursor-text transition-all opacity-100 hover:opacity-100"
       style={{ color: accentColor }}
     >
       {value}{suffix}
@@ -291,7 +291,7 @@ export default function App() {
       <style>{`
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: ${accent}44; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: ${accent}77; border-radius: 10px; }
         input[type="range"] { accent-color: ${accent}; cursor: pointer; }
         input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
         input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 2px; }
@@ -331,19 +331,19 @@ export default function App() {
         }
       `}</style>
       {/* Sidebar */}
-      <aside className="w-[390px] h-full border-r flex flex-col overflow-y-auto color-transition" style={{ borderColor: `${accent}33` }}>
-        <div className="p-6 border-b color-transition" style={{ borderColor: `${accent}33` }}>
+      <aside className="w-[390px] h-full border-r flex flex-col overflow-y-auto color-transition" style={{ borderColor: `${accent}66` }}>
+        <div className="p-6 border-b color-transition" style={{ borderColor: `${accent}66` }}>
           <h1 className="text-5xl font-black tracking-tighter leading-none" style={{ color: accent }}>
             Type <br /> Sampler
           </h1>
         </div>
         {/* Input Area */}
-        <div className="p-6 border-b color-transition" style={{ borderColor: `${accent}33` }}>
+        <div className="p-6 border-b color-transition" style={{ borderColor: `${accent}66` }}>
           <div className="flex justify-between items-end mb-2">
             <span className="text-[10px] uppercase tracking-widest font-bold">Sample Text</span>
             <button
               onClick={() => setSample(PANGRAMS[Math.floor(Math.random() * PANGRAMS.length)])}
-              className="text-[10px] underline hover:opacity-70 lowercase"
+              className="text-[10px] underline hover:opacity-90 lowercase"
             >
               pangram me
             </button>
@@ -352,11 +352,11 @@ export default function App() {
             value={sample}
             onChange={(e) => setSample(e.target.value)}
             className="w-full h-24 bg-transparent border p-3 text-sm resize-none outline-none rounded-none transition-all focus:ring-1"
-            style={{ borderColor: `${accent}44`, color: accent, "--tw-ring-color": accent }}
+            style={{ borderColor: `${accent}77`, color: accent, "--tw-ring-color": accent }}
           />
         </div>
         {/* Font Management */}
-        <div className="p-6 border-b space-y-6 color-transition" style={{ borderColor: `${accent}33` }}>
+        <div className="p-6 border-b space-y-6 color-transition" style={{ borderColor: `${accent}66` }}>
           <div>
             <label className="text-[10px] uppercase tracking-widest font-bold mb-2 block">Google Fonts</label>
             <div className="flex gap-1">
@@ -366,12 +366,12 @@ export default function App() {
                 onKeyDown={(e) => e.key === "Enter" && addGoogleFont(googleFontInput)}
                 placeholder="Inter, Roboto, Syne..."
                 className="flex-1 bg-transparent border px-3 py-2 text-xs outline-none rounded-none"
-                style={{ borderColor: `${accent}44` }}
+                style={{ borderColor: `${accent}77` }}
               />
               <button
                 onClick={() => setShowFontBrowser(true)}
                 className="px-4 py-2 text-sm border hover:bg-white/10 transition-colors"
-                style={{ borderColor: `${accent}44` }}
+                style={{ borderColor: `${accent}77` }}
               >
                 +
               </button>
@@ -388,18 +388,18 @@ export default function App() {
           {/* Active Fonts List */}
           <div className="space-y-6">
             <div>
-              <label className="text-[8px] uppercase tracking-[0.2em] opacity-50 mb-3 block">Active Fonts</label>
-              <div className="space-y-1 max-h-72 overflow-y-auto pr-2 border" style={{ borderColor: `${accent}22`, padding: "8px" }}>
+              <label className="text-[8px] uppercase tracking-[0.2em] opacity-70 mb-3 block">Active Fonts</label>
+              <div className="space-y-1 max-h-72 overflow-y-auto pr-2 border" style={{ borderColor: `${accent}55`, padding: "8px" }}>
                 {fonts.map(font => (
-                  <div key={font.id} className="flex flex-col border-b last:border-0 pb-3 mb-2 color-transition" style={{ borderColor: `${accent}11` }}>
+                  <div key={font.id} className="flex flex-col border-b last:border-0 pb-3 mb-2 color-transition" style={{ borderColor: `${accent}44` }}>
                     <div className="flex justify-between items-start mb-1">
                       <div className="flex flex-wrap items-center gap-2 max-w-[280px]">
                         <span className="text-[11px] font-medium truncate">{font.name}</span>
-                        <span className="text-[7px] font-black tracking-tighter px-1 border leading-tight" style={{ borderColor: `${accent}66`, color: `${accent}aa` }}>
+                        <span className="text-[7px] font-black tracking-tighter px-1 border leading-tight" style={{ borderColor: `${accent}99`, color: `${accent}dd` }}>
                           {font.source || "SYSTEM"}
                         </span>
                       </div>
-                      <button onClick={() => removeFont(font.id)} className="opacity-40 hover:opacity-100 p-1 -mr-1">
+                      <button onClick={() => removeFont(font.id)} className="opacity-60 hover:opacity-100 p-1 -mr-1">
                         <X size={12} />
                       </button>
                     </div>
@@ -407,7 +407,7 @@ export default function App() {
                       <div className="grid grid-cols-2 gap-1 mt-1">
                         <select
                           className="bg-transparent text-[10px] border px-1 py-1 outline-none"
-                          style={{ borderColor: `${accent}22` }}
+                          style={{ borderColor: `${accent}55` }}
                           value={getFontVariant(font.id).weight}
                           onChange={(e) => setFontVariants(v => ({ ...v, [font.id]: { ...getFontVariant(font.id), weight: Number(e.target.value) } }))}
                         >
@@ -415,7 +415,7 @@ export default function App() {
                         </select>
                         <select
                           className="bg-transparent text-[10px] border px-1 py-1 outline-none"
-                          style={{ borderColor: `${accent}22` }}
+                          style={{ borderColor: `${accent}55` }}
                           value={getFontVariant(font.id).style}
                           onChange={(e) => setFontVariants(v => ({ ...v, [font.id]: { ...getFontVariant(font.id), style: e.target.value } }))}
                         >
@@ -434,18 +434,18 @@ export default function App() {
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
                   className="overflow-hidden pt-2 border-t"
-                  style={{ borderColor: `${accent}22` }}
+                  style={{ borderColor: `${accent}55` }}
                 >
-                  <label className="text-[8px] uppercase tracking-[0.2em] opacity-50 mb-3 block">Misfits</label>
+                  <label className="text-[8px] uppercase tracking-[0.2em] opacity-70 mb-3 block">Misfits</label>
                   <div className="flex flex-wrap gap-1.5">
                     {misfits.map(font => (
                       <button
                         key={font.id}
                         onClick={() => restoreFont(font.id)}
                         className="text-[9px] border px-2 py-1.5 flex items-center gap-2 hover:bg-white/5 transition-colors"
-                        style={{ borderColor: `${accent}22` }}
+                        style={{ borderColor: `${accent}55` }}
                       >
-                        <RotateCcw size={10} className="opacity-60" />
+                        <RotateCcw size={10} className="opacity-80" />
                         <span>{font.name}</span>
                       </button>
                     ))}
@@ -463,7 +463,7 @@ export default function App() {
               <span className="text-[10px] uppercase tracking-widest font-bold block">Typography</span>
               <button
                 onClick={resetTypography}
-                className="text-[10px] underline hover:opacity-70 lowercase"
+                className="text-[10px] underline hover:opacity-90 lowercase"
               >
                 reset
               </button>
@@ -498,7 +498,7 @@ export default function App() {
             </div>
           </div>
           {/* Color Section */}
-          <div className="pt-8 border-t space-y-6 color-transition" style={{ borderColor: `${accent}33` }}>
+          <div className="pt-8 border-t space-y-6 color-transition" style={{ borderColor: `${accent}66` }}>
             <div className="flex justify-between items-end mb-1">
               <label className="text-[10px] uppercase tracking-widest font-bold">Color</label>
               <button
@@ -506,7 +506,7 @@ export default function App() {
                   setDisplayTextColor("#202020");
                   setDisplayBgColor("#ece9e2");
                 }}
-                className="text-[10px] underline hover:opacity-70 lowercase"
+                className="text-[10px] underline hover:opacity-90 lowercase"
               >
                 reset
               </button>
@@ -518,23 +518,23 @@ export default function App() {
 
             <div className="space-y-6">
               <div className="flex flex-col">
-                <span className="text-[10px] uppercase tracking-widest font-bold opacity-60 mb-2">Text</span>
+                <span className="text-[10px] uppercase tracking-widest font-bold opacity-80 mb-2">Text</span>
                 <div className="flex gap-1.5 flex-wrap">
-                  <input type="color" value={displayTextColor} onChange={e => setDisplayTextColor(e.target.value)} onBlur={e => addColorToHistory(e.target.value, setTextColorHistory)} className="w-14 h-7 outline-none cursor-pointer border rounded-sm" style={{ borderColor: `${accent}22` }} />
-                  {textColorHistory.map((c, i) => <button key={i} onClick={() => setDisplayTextColor(c)} className="w-7 h-7 rounded-sm border color-transition" style={{ backgroundColor: c, borderColor: `${accent}22` }} />)}
+                  <input type="color" value={displayTextColor} onChange={e => setDisplayTextColor(e.target.value)} onBlur={e => addColorToHistory(e.target.value, setTextColorHistory)} className="w-14 h-7 outline-none cursor-pointer border rounded-sm" style={{ borderColor: `${accent}55` }} />
+                  {textColorHistory.map((c, i) => <button key={i} onClick={() => setDisplayTextColor(c)} className="w-7 h-7 rounded-sm border color-transition" style={{ backgroundColor: c, borderColor: `${accent}55` }} />)}
                 </div>
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] uppercase tracking-widest font-bold opacity-60 mb-2">Background</span>
+                <span className="text-[10px] uppercase tracking-widest font-bold opacity-80 mb-2">Background</span>
                 <div className="flex gap-1.5 flex-wrap">
-                  <input type="color" value={displayBgColor} onChange={e => setDisplayBgColor(e.target.value)} onBlur={e => addColorToHistory(e.target.value, setBgColorHistory)} className="w-14 h-7 outline-none cursor-pointer border rounded-sm" style={{ borderColor: `${accent}22` }} />
-                  {bgColorHistory.map((c, i) => <button key={i} onClick={() => setDisplayBgColor(c)} className="w-7 h-7 rounded-sm border color-transition" style={{ backgroundColor: c, borderColor: `${accent}22` }} />)}
+                  <input type="color" value={displayBgColor} onChange={e => setDisplayBgColor(e.target.value)} onBlur={e => addColorToHistory(e.target.value, setBgColorHistory)} className="w-14 h-7 outline-none cursor-pointer border rounded-sm" style={{ borderColor: `${accent}55` }} />
+                  {bgColorHistory.map((c, i) => <button key={i} onClick={() => setDisplayBgColor(c)} className="w-7 h-7 rounded-sm border color-transition" style={{ backgroundColor: c, borderColor: `${accent}55` }} />)}
                 </div>
               </div>
             </div>
           </div>
           {/* Export / Print Section */}
-          <div className="pt-8 border-t space-y-4 color-transition" style={{ borderColor: `${accent}33` }}>
+          <div className="pt-8 border-t space-y-4 color-transition" style={{ borderColor: `${accent}66` }}>
             <label className="text-[10px] uppercase tracking-widest font-bold block mb-1">Export</label>
             <div className="flex flex-col gap-1">
               <button
@@ -545,7 +545,7 @@ export default function App() {
                 Export to PDF
               </button>
             </div>
-            <p className="text-[10px] opacity-60 leading-tight pt-2">
+            <p className="text-[10px] opacity-80 leading-tight pt-2">
               This tool was made by <a href="https://www.instagram.com/mireyareyy/" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-100 font-normal" style={{ color: accent }}>Mireya Lavender</a>
             </p>
           </div>
@@ -566,11 +566,11 @@ export default function App() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   className="font-card border overflow-hidden shadow-sm color-transition group/card"
-                  style={{ borderColor: `${accent}33`, backgroundColor: "transparent" }}
+                  style={{ borderColor: `${accent}66`, backgroundColor: "transparent" }}
                 >
-                  <div className="relative px-4 py-2 border-b flex justify-between items-center bg-black/5 color-transition" style={{ borderColor: `${accent}22` }}>
-                    <span className="text-[10px] font-black tracking-widest uppercase opacity-70" style={{ color: accent }}>{font.name}</span>
-                    <div className="utility-bar absolute left-1/2 -translate-x-1/2 flex items-center gap-1 opacity-40 hover:opacity-100 transition-opacity" style={{ color: accent }}>
+                  <div className="relative px-4 py-2 border-b flex justify-between items-center bg-black/5 color-transition" style={{ borderColor: `${accent}55` }}>
+                    <span className="text-[10px] font-black tracking-widest uppercase opacity-90" style={{ color: accent }}>{font.name}</span>
+                    <div className="utility-bar absolute left-1/2 -translate-x-1/2 flex items-center gap-1 opacity-60 hover:opacity-100 transition-opacity" style={{ color: accent }}>
                       {[1, 2, 3, 4, 5].map((val) => (
                         <button
                           key={val}
@@ -585,11 +585,11 @@ export default function App() {
                               transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                             />
                           )}
-                          <span className={currentRating === val ? "opacity-100" : "opacity-60"}>{val}</span>
+                          <span className={currentRating === val ? "opacity-100" : "opacity-80"}>{val}</span>
                         </button>
                       ))}
                     </div>
-                    <div className="text-[10px] font-mono opacity-30 tracking-widest">#{String(idx + 1).padStart(2, '0')}</div>
+                    <div className="text-[10px] font-mono opacity-50 tracking-widest">#{String(idx + 1).padStart(2, '0')}</div>
                   </div>
 
                   <div
@@ -632,10 +632,10 @@ export default function App() {
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
               className="w-full max-w-4xl h-full max-h-[80vh] overflow-hidden flex flex-col shadow-2xl border color-transition"
-              style={{ backgroundColor: appBg, borderColor: `${accent}44` }}
+              style={{ backgroundColor: appBg, borderColor: `${accent}77` }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="p-6 border-b flex justify-between items-center color-transition" style={{ borderColor: `${accent}22` }}>
+              <div className="p-6 border-b flex justify-between items-center color-transition" style={{ borderColor: `${accent}55` }}>
                 <div className="flex-1 mr-4">
                   <h2 className="text-xl font-bold uppercase tracking-tight mb-4" style={{ color: accent }}>Browse Google Fonts</h2>
                   <input
@@ -644,10 +644,10 @@ export default function App() {
                     value={fontBrowserSearch}
                     onChange={(e) => setFontBrowserSearch(e.target.value)}
                     className="w-full bg-transparent border px-4 py-3 text-sm outline-none rounded-none"
-                    style={{ borderColor: `${accent}44`, color: accent }}
+                    style={{ borderColor: `${accent}77`, color: accent }}
                   />
                 </div>
-                <button onClick={() => setShowFontBrowser(false)} className="w-10 h-10 flex items-center justify-center text-2xl opacity-50 hover:opacity-100" style={{ color: accent }}>×</button>
+                <button onClick={() => setShowFontBrowser(false)} className="w-10 h-10 flex items-center justify-center text-2xl opacity-70 hover:opacity-100" style={{ color: accent }}>×</button>
               </div>
               <div className="flex-1 overflow-y-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {filteredBrowserFonts.map((f) => {
@@ -659,14 +659,14 @@ export default function App() {
                       onClick={() => addGoogleFont(f)}
                       className="group p-4 border text-left transition-all hover:scale-[1.02] active:scale-[0.98] flex flex-col justify-between"
                       style={{
-                        borderColor: isAdded ? `${accent}11` : `${accent}33`,
+                        borderColor: isAdded ? `${accent}44` : `${accent}66`,
                         opacity: isAdded ? 0.4 : 1,
-                        backgroundColor: isAdded ? "transparent" : `${accent}05`
+                        backgroundColor: isAdded ? "transparent" : `${accent}38`
                       }}
                     >
                       <div>
                         <div className="text-xs font-bold uppercase tracking-widest mb-1">{f}</div>
-                        <div className="text-[10px] opacity-40 uppercase">{FONT_VARIANT_PRESETS[f.toLowerCase()]?.weights.length || 1} weights</div>
+                        <div className="text-[10px] opacity-60 uppercase">{FONT_VARIANT_PRESETS[f.toLowerCase()]?.weights.length || 1} weights</div>
                       </div>
                     </button>
                   );
