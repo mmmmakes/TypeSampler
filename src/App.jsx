@@ -657,7 +657,7 @@ export default function App() {
         </button>
         <div className="p-6 border-b color-transition" style={{ borderColor: `${accent}66` }}>
           <h1 aria-label="Type Sampler" style={{ color: accent, fontFamily: "'Cutive', serif" }}>
-            <span className="flex">
+            <span className="flex gap-1">
               {[
                 { char: "T", href: "https://abcdinamo.com/" },
                 { char: "Y", href: "https://lineto.com/typefaces" },
@@ -667,7 +667,7 @@ export default function App() {
                 <TitleLetter key={i} char={l.char} href={l.href} accent={accent} appBg={appBg} />
               ))}
             </span>
-            <span className="flex -mt-px">
+            <span className="flex gap-1 mt-1">
               {[
                 { char: "S", href: "https://klim.co.nz/fonts/" },
                 { char: "A", href: "https://okaytype.com/" },
@@ -978,7 +978,7 @@ export default function App() {
                         <button
                           key={val}
                           onClick={() => handleRate(font.id, val)}
-                          className="relative w-5 h-5 flex items-center justify-center text-[9px] font-bold leading-none transition-all hover:scale-110"
+                          className="relative w-5 h-5 flex items-center justify-center text-[9px] font-bold leading-none transition-all hover:scale-110 pt-0.5"
                         >
                           {currentRating === val && (
                             <motion.div
