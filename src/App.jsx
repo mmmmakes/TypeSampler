@@ -678,7 +678,7 @@ export default function App() {
                 </div>
                 <label className="text-[8px] uppercase tracking-[0.2em] opacity-70 block mb-1">Secondary Font</label>
                 {secondaryFont ? (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-stretch gap-2">
                     <button
                       onClick={() => {
                         setAddFontsContext("secondary");
@@ -692,7 +692,7 @@ export default function App() {
                     </button>
                     <button
                       onClick={() => setSecondaryFontId(null)}
-                      className="p-2 opacity-80 hover:opacity-100"
+                      className="aspect-square flex items-center justify-center opacity-80 hover:opacity-100 transition-all"
                       style={{ backgroundColor: accent, color: appBg }}
                       aria-label="Clear secondary font"
                     >
@@ -913,7 +913,7 @@ export default function App() {
                 ))}
               </div>
               {addFontsTab === "loaded" && addFontsContext === "secondary" && (
-                <div className="flex-1 overflow-y-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="flex-1 overflow-y-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 content-start">
                   {fonts.map(font => {
                     const isSelected = secondaryFontId === font.id;
                     const weightCount = font.availableWeights?.length || 1;
@@ -936,7 +936,7 @@ export default function App() {
                       >
                         <div>
                           <div className="text-sm font-medium mb-1 truncate">{font.name}</div>
-                          <div className="text-[10px] uppercase tracking-widest font-bold opacity-70">{weightCount} weight{weightCount === 1 ? "" : "s"}</div>
+                          <div className="text-[8px] uppercase tracking-[0.2em] opacity-70">{weightCount} weight{weightCount === 1 ? "" : "s"}</div>
                         </div>
                       </button>
                     );
@@ -960,7 +960,7 @@ export default function App() {
                       style={{ borderColor: `${accent}77`, color: accent }}
                     />
                   </div>
-                  <div className="flex-1 overflow-y-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  <div className="flex-1 overflow-y-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 content-start">
                     {filteredBrowserFonts.map((f) => {
                       const isAdded = fonts.some(font => font.name.toLowerCase() === f.toLowerCase());
                       return (
@@ -977,7 +977,7 @@ export default function App() {
                         >
                           <div>
                             <div className="text-xs font-bold uppercase tracking-widest mb-1">{f}</div>
-                            <div className="text-[10px] uppercase tracking-widest font-bold opacity-70">{FONT_VARIANT_PRESETS[f.toLowerCase()]?.weights.length || 1} weights</div>
+                            <div className="text-[8px] uppercase tracking-[0.2em] opacity-70">{FONT_VARIANT_PRESETS[f.toLowerCase()]?.weights.length || 1} weights</div>
                           </div>
                         </button>
                       );
@@ -1010,7 +1010,7 @@ export default function App() {
                       <p className="text-[12px] opacity-70">No installed fonts were shared. Reopen and grant access to see your library.</p>
                     )}
                     {!installedFontsLoading && !installedFontsError && filteredInstalledFonts.length > 0 && (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 content-start">
                         {filteredInstalledFonts.map((f) => {
                           const isAdded = fonts.some(font => font.name.toLowerCase() === f.family.toLowerCase());
                           return (
@@ -1028,7 +1028,7 @@ export default function App() {
                             >
                               <div>
                                 <div className="text-sm font-medium mb-1 truncate">{f.family}</div>
-                                <div className="text-[10px] uppercase tracking-widest font-bold opacity-70">{f.availableWeights.length} weight{f.availableWeights.length === 1 ? "" : "s"}</div>
+                                <div className="text-[8px] uppercase tracking-[0.2em] opacity-70">{f.availableWeights.length} weight{f.availableWeights.length === 1 ? "" : "s"}</div>
                               </div>
                             </button>
                           );
