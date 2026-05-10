@@ -635,7 +635,7 @@ export default function App() {
           {/* Active Fonts List */}
           <div className="space-y-6">
             <div>
-              <label className="text-[8px] uppercase tracking-[0.2em] opacity-70 mb-3 block">Active Fonts</label>
+              <label className="text-[8px] uppercase tracking-[0.2em] opacity-70 mb-3 block">Active</label>
               <Reorder.Group
                 axis="y"
                 values={fonts}
@@ -664,7 +664,7 @@ export default function App() {
                   exit={{ opacity: 0, height: 0 }}
                   className="overflow-hidden pt-2"
                 >
-                  <label className="text-[8px] uppercase tracking-[0.2em] opacity-70 mb-3 block">Misfits</label>
+                  <label className="text-[8px] uppercase tracking-[0.2em] opacity-70 mb-3 block">Misfit</label>
                   <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-2 border" style={{ borderColor: `${accent}55`, padding: "8px" }}>
                     {misfits.map(font => (
                       <button
@@ -884,7 +884,7 @@ export default function App() {
                     className="flex items-center specimen-text"
                     style={{
                       ...staticPadding,
-                      paddingBottom: secondaryEnabled && secondaryFont ? "12px" : undefined,
+                      paddingBottom: secondaryEnabled && secondaryFont ? 0 : undefined,
                       fontFamily: font.family,
                       fontSize: `${fontSize}px`,
                       fontWeight: variant.weight,
@@ -905,7 +905,8 @@ export default function App() {
                       className="flex items-center specimen-text"
                       style={{
                         ...staticPadding,
-                        paddingTop: "12px",
+                        paddingTop: 0,
+                        marginTop: "20px",
                         fontFamily: secondaryFont.family,
                         fontSize: `${secondaryFontSize}px`,
                         fontWeight: getFontVariant(secondaryFont.id).weight,
