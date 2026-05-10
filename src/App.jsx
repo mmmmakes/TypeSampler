@@ -640,7 +640,7 @@ export default function App() {
       {/* Mobile title bar */}
       <div className="md:hidden flex-shrink-0 p-6 border-b" style={{ borderColor: `${accent}66` }}>
         <h1 aria-label="Type Sampler" style={{ color: accent, fontFamily: "'Cutive', serif" }}>
-          <span className="flex gap-px">
+          <span className="flex">
             {[
               { char: "T", href: "https://abcdinamo.com/" },
               { char: "Y", href: "https://lineto.com/typefaces" },
@@ -650,7 +650,7 @@ export default function App() {
               <TitleLetter key={i} char={l.char} href={l.href} accent={accent} appBg={appBg} />
             ))}
           </span>
-          <span className="flex gap-px mt-px">
+          <span className="flex">
             {[
               { char: "S", href: "https://klim.co.nz/fonts/" },
               { char: "A", href: "https://okaytype.com/" },
@@ -665,27 +665,28 @@ export default function App() {
           </span>
         </h1>
       </div>
+      {/* Floating Adjust Fonts button (mobile only) */}
+      <button
+        onClick={() => setBottomSheetOpen(!bottomSheetOpen)}
+        className="md:hidden fixed bottom-6 right-6 z-50 px-6 py-3 text-[10px] uppercase tracking-widest font-bold transition-all"
+        style={{ backgroundColor: accent, color: appBg }}
+        aria-label={bottomSheetOpen ? "Close settings" : "Open settings"}
+      >
+        {bottomSheetOpen ? "Done" : "Adjust Fonts"}
+      </button>
       {/* Sidebar */}
       <aside
         className={`
           fixed inset-x-0 bottom-0 z-40 max-h-[85vh] rounded-t-2xl shadow-2xl flex flex-col overflow-y-auto color-transition
-          ${bottomSheetOpen ? "translate-y-0" : "translate-y-[calc(100%_-_56px)]"}
+          ${bottomSheetOpen ? "translate-y-0" : "translate-y-full"}
           transition-transform duration-300 ease-out
           md:static md:translate-y-0 md:transition-none md:max-h-none md:rounded-none md:shadow-none md:w-[390px] md:h-full md:border-r
         `}
         style={{ backgroundColor: appBg, borderColor: `${accent}66` }}
       >
-        <button
-          onClick={() => setBottomSheetOpen(!bottomSheetOpen)}
-          className="md:hidden flex items-center justify-center h-[56px] flex-shrink-0 sticky top-0 z-10 text-[10px] uppercase tracking-widest font-bold"
-          style={{ backgroundColor: accent, color: appBg }}
-          aria-label={bottomSheetOpen ? "Close settings" : "Open settings"}
-        >
-          {bottomSheetOpen ? "Done" : "Adjust Fonts"}
-        </button>
         <div className="hidden md:block p-6 border-b color-transition" style={{ borderColor: `${accent}66` }}>
           <h1 aria-label="Type Sampler" style={{ color: accent, fontFamily: "'Cutive', serif" }}>
-            <span className="flex gap-px">
+            <span className="flex">
               {[
                 { char: "T", href: "https://abcdinamo.com/" },
                 { char: "Y", href: "https://lineto.com/typefaces" },
@@ -695,7 +696,7 @@ export default function App() {
                 <TitleLetter key={i} char={l.char} href={l.href} accent={accent} appBg={appBg} />
               ))}
             </span>
-            <span className="flex gap-px mt-px">
+            <span className="flex">
               {[
                 { char: "S", href: "https://klim.co.nz/fonts/" },
                 { char: "A", href: "https://okaytype.com/" },
