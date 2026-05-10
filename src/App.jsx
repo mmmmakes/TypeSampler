@@ -159,7 +159,7 @@ const TitleLetter = ({ char, accent, appBg }) => {
     <motion.span
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      animate={{ y: hovered ? 2 : 0, scale: hovered ? 0.96 : 1 }}
+      animate={{ y: hovered ? 3 : 0, scale: hovered ? 0.96 : 1 }}
       transition={{ type: "spring", stiffness: 700, damping: 28 }}
       className="w-11 h-11 rounded-full border-2 flex items-center justify-center text-2xl cursor-pointer select-none"
       style={{
@@ -168,7 +168,10 @@ const TitleLetter = ({ char, accent, appBg }) => {
         color: hovered ? appBg : accent,
         lineHeight: 1,
         paddingTop: "10px",
-        transition: "background-color 0.12s ease, color 0.12s ease"
+        boxShadow: hovered
+          ? `1px 1px 0 ${accent}`
+          : `1px 1px 0 ${accent}, 2px 2px 0 ${accent}, 3px 3px 0 ${accent}, 4px 4px 0 ${accent}`,
+        transition: "background-color 0.12s ease, color 0.12s ease, box-shadow 0.15s ease"
       }}
     >
       {char}
