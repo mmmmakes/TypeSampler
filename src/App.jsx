@@ -581,12 +581,12 @@ export default function App() {
       <aside className="w-[390px] h-full border-r flex flex-col overflow-y-auto color-transition" style={{ borderColor: `${accent}66` }}>
         <div className="p-6 border-b color-transition" style={{ borderColor: `${accent}66` }}>
           <h1 aria-label="Type Sampler" style={{ color: accent, fontFamily: "'Cutive', serif" }}>
-            <span className="flex">
+            <span className="flex -space-x-1">
               {["T", "Y", "P", "E"].map((c, i) => (
                 <TitleLetter key={i} char={c} accent={accent} appBg={appBg} />
               ))}
             </span>
-            <span className="flex -mt-px">
+            <span className="flex -space-x-1 -mt-1">
               {["S", "A", "M", "P", "L", "E", "R"].map((c, i) => (
                 <TitleLetter key={i} char={c} accent={accent} appBg={appBg} />
               ))}
@@ -761,16 +761,18 @@ export default function App() {
                     Select a Font
                   </button>
                 )}
-                <TypographyControls
-                  title="Secondary Typography"
-                  fontSize={secondaryFontSize} setFontSize={setSecondaryFontSize}
-                  letterSpacing={secondaryLetterSpacing} setLetterSpacing={setSecondaryLetterSpacing}
-                  leading={secondaryLeading} setLeading={setSecondaryLeading}
-                  selectedTransform={secondaryTransform} setSelectedTransform={setSecondaryTransform}
-                  align={secondaryAlign} setAlign={setSecondaryAlign}
-                  onReset={resetSecondaryTypography}
-                  accent={accent} appBg={appBg}
-                />
+                <div className="pt-4">
+                  <TypographyControls
+                    title="Typography"
+                    fontSize={secondaryFontSize} setFontSize={setSecondaryFontSize}
+                    letterSpacing={secondaryLetterSpacing} setLetterSpacing={setSecondaryLetterSpacing}
+                    leading={secondaryLeading} setLeading={setSecondaryLeading}
+                    selectedTransform={secondaryTransform} setSelectedTransform={setSecondaryTransform}
+                    align={secondaryAlign} setAlign={setSecondaryAlign}
+                    onReset={resetSecondaryTypography}
+                    accent={accent} appBg={appBg}
+                  />
+                </div>
               </>
             )}
           </div>
