@@ -15,6 +15,16 @@ const PANGRAMS = [
   "Jackdaws love my big sphinx of quartz.",
   "Pack my box with five dozen liquor jugs."
 ];
+const LOREM_IPSUM = [
+  "The letterforms settled into a quiet rhythm, each curve balancing against the next with deliberate restraint. Margins held the composition in place while the baseline carried every word forward, steady and unassuming. In the space between serif and stem, the page found its voice.",
+  "Typography begins where language becomes visible. A headline may command attention, but the smallest details often decide whether a reader stays. The weight of a stroke, the openness of a counter, and the tension of a line break all shape how meaning enters the eye.",
+  "The grid was never meant to be seen, only felt. It organized the page with invisible discipline, giving images room to breathe and text a sense of direction. Every column suggested order, but the best compositions knew when to break it.",
+  "A typeface carries memory before it carries words. Some letters feel mechanical, others human, some precise, others warm. The designer's task is not simply to choose what looks good, but to choose what makes the message behave correctly.",
+  "Spacing is the quiet architecture of reading. Too little, and the page tightens into noise. Too much, and the sentence loses its thread. Between those extremes lives the subtle calibration that makes a block of text feel intentional.",
+  "The poster relied on contrast rather than decoration. Large type pressed against empty space, creating tension without excess. What was omitted became as important as what was printed, allowing the composition to feel confident instead of crowded.",
+  "Every layout makes a promise. Alignment promises clarity, hierarchy promises direction, and proportion promises that the reader will not have to work harder than necessary. Good design does not remove complexity; it gives complexity a structure.",
+  "The alphabet became a material, not just a system. Letters stretched, repeated, cropped, and layered until they moved somewhere between language and image. In that shift, typography stopped being neutral and became a surface for tone, identity, and intent."
+];
 const INITIAL_STATE = {
   sample: "Type to test fonts...",
   fontSize: 24,
@@ -712,10 +722,10 @@ export default function App() {
                   <div className="flex justify-between items-end mb-2">
                     <span className="text-[8px] uppercase tracking-[0.2em] opacity-70">Secondary Sample Text</span>
                     <button
-                      onClick={() => setSecondarySample(PANGRAMS[Math.floor(Math.random() * PANGRAMS.length)])}
+                      onClick={() => setSecondarySample(LOREM_IPSUM[Math.floor(Math.random() * LOREM_IPSUM.length)])}
                       className="text-[10px] underline hover:opacity-90 lowercase"
                     >
-                      pangram me
+                      lorem ipsum me
                     </button>
                   </div>
                   <textarea
