@@ -213,23 +213,29 @@ const TypographyControls = ({
       </button>
     </div>
 
-    <div className="flex justify-between items-center mb-1">
-      <span className="text-[8px] uppercase tracking-[0.2em] opacity-70">Size</span>
-      <EditableValue value={fontSize} suffix="px" onSave={setFontSize} accentColor={accent} />
+    <div>
+      <div className="flex justify-between items-center">
+        <span className="text-[8px] uppercase tracking-[0.2em] opacity-70">Size</span>
+        <EditableValue value={fontSize} suffix="px" onSave={setFontSize} accentColor={accent} />
+      </div>
+      <input type="range" min="8" max="240" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} className="w-full" />
     </div>
-    <input type="range" min="8" max="240" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} className="w-full" />
 
-    <div className="flex justify-between items-center mb-1">
-      <span className="text-[8px] uppercase tracking-[0.2em] opacity-70">Spacing</span>
-      <EditableValue value={letterSpacing} suffix="px" onSave={setLetterSpacing} accentColor={accent} />
+    <div>
+      <div className="flex justify-between items-center">
+        <span className="text-[8px] uppercase tracking-[0.2em] opacity-70">Spacing</span>
+        <EditableValue value={letterSpacing} suffix="px" onSave={setLetterSpacing} accentColor={accent} />
+      </div>
+      <input type="range" min="-10" max="100" value={letterSpacing} onChange={e => setLetterSpacing(Number(e.target.value))} className="w-full" />
     </div>
-    <input type="range" min="-10" max="100" value={letterSpacing} onChange={e => setLetterSpacing(Number(e.target.value))} className="w-full" />
 
-    <div className="flex justify-between items-center mb-1">
-      <span className="text-[8px] uppercase tracking-[0.2em] opacity-70">Leading</span>
-      <EditableValue value={leading} onSave={setLeading} accentColor={accent} />
+    <div>
+      <div className="flex justify-between items-center">
+        <span className="text-[8px] uppercase tracking-[0.2em] opacity-70">Leading</span>
+        <EditableValue value={leading} onSave={setLeading} accentColor={accent} />
+      </div>
+      <input type="range" min="0.5" max="3" step="0.01" value={leading} onChange={e => setLeading(Number(e.target.value))} className="w-full" />
     </div>
-    <input type="range" min="0.5" max="3" step="0.01" value={leading} onChange={e => setLeading(Number(e.target.value))} className="w-full" />
 
     <div className="grid grid-cols-2 gap-1 mt-4">
       {["as-typed", "title", "upper", "lower"].map(t => (
@@ -262,6 +268,7 @@ export default function App() {
   const [monochrome, setMonochrome] = useState(false);
   const [showAddFonts, setShowAddFonts] = useState(false);
   const [addFontsTab, setAddFontsTab] = useState("google");
+  const [addFontsContext, setAddFontsContext] = useState("add");
   const [installedFontsList, setInstalledFontsList] = useState(null);
   const [installedFontsSearch, setInstalledFontsSearch] = useState("");
   const [installedFontsError, setInstalledFontsError] = useState(null);
@@ -301,7 +308,16 @@ export default function App() {
   const secondaryFont = fonts.find(f => f.id === secondaryFontId);
   const addGoogleFont = async (fontName) => {
     const cleaned = fontName.trim();
-    if (!cleaned || fonts.some(f => f.name.toLowerCase() === cleaned.toLowerCase())) return;
+    if (!cleaned) return;
+    const existing = fonts.find(f => f.name.toLowerCase() === cleaned.toLowerCase());
+    if (existing) {
+      if (addFontsContext === "secondary") {
+        setSecondaryFontId(existing.id);
+        setShowAddFonts(false);
+        setAddFontsContext("add");
+      }
+      return;
+    }
     const id = getSafeFontId(cleaned);
     const family = `'${cleaned.replace(/'/g, "\\'")}', Arial, sans-serif`;
     const preset = FONT_VARIANT_PRESETS[cleaned.toLowerCase()];
@@ -317,6 +333,11 @@ export default function App() {
       { id, name: cleaned, family, source: "GOOGLE", status: "loading", hasVariants: availableWeights.length > 1 || availableStyles.length > 1, availableWeights, availableStyles }
     ]);
     setFontBrowserSearch("");
+    if (addFontsContext === "secondary") {
+      setSecondaryFontId(id);
+      setShowAddFonts(false);
+      setAddFontsContext("add");
+    }
     if (document.fonts?.load) {
       try {
         await document.fonts.load(`400 24px '${cleaned}'`);
@@ -329,6 +350,7 @@ export default function App() {
   const handleLocalFontUpload = async (event) => {
     const files = Array.from(event.target.files || []);
     if (!files.length) return;
+    let firstNewId = null;
     for (const file of files) {
       const id = "local-" + Date.now() + "-" + Math.random().toString(36).slice(2);
       const familyName = makeLocalFontFamily(id);
@@ -348,11 +370,17 @@ export default function App() {
           hasVariants: false, availableWeights: [variant.weight], availableStyles: [variant.style]
         }]);
         setFontVariants(prev => ({ ...prev, [id]: variant }));
+        if (firstNewId === null) firstNewId = id;
       } catch (e) {
         console.error("Local font failed to load:", file.name, e);
       }
     }
     event.target.value = "";
+    if (addFontsContext === "secondary" && firstNewId) {
+      setSecondaryFontId(firstNewId);
+      setShowAddFonts(false);
+      setAddFontsContext("add");
+    }
   };
   const supportsLocalFonts = typeof window !== "undefined" && "queryLocalFonts" in window;
   const loadInstalledFonts = async () => {
@@ -386,7 +414,15 @@ export default function App() {
     }
   };
   const addInstalledFont = (entry) => {
-    if (fonts.some(f => f.name.toLowerCase() === entry.family.toLowerCase())) return;
+    const existing = fonts.find(f => f.name.toLowerCase() === entry.family.toLowerCase());
+    if (existing) {
+      if (addFontsContext === "secondary") {
+        setSecondaryFontId(existing.id);
+        setShowAddFonts(false);
+        setAddFontsContext("add");
+      }
+      return;
+    }
     const id = "installed-" + Date.now() + "-" + Math.random().toString(36).slice(2);
     const family = `'${entry.family.replace(/'/g, "\\'")}', sans-serif`;
     setFonts(prev => [
@@ -402,6 +438,11 @@ export default function App() {
         availableStyles: entry.availableStyles
       }
     ]);
+    if (addFontsContext === "secondary") {
+      setSecondaryFontId(id);
+      setShowAddFonts(false);
+      setAddFontsContext("add");
+    }
   };
   const resetTypography = () => {
     setFontSize(INITIAL_STATE.fontSize);
@@ -525,7 +566,7 @@ export default function App() {
         <div className="p-6 border-b space-y-6 color-transition" style={{ borderColor: `${accent}66` }}>
           <label className="text-[10px] uppercase tracking-widest font-bold block mb-1">Fonts</label>
           <button
-            onClick={() => { setAddFontsTab("google"); setShowAddFonts(true); }}
+            onClick={() => { setAddFontsContext("add"); setAddFontsTab("google"); setShowAddFonts(true); }}
             className="w-full py-3 text-[10px] font-bold uppercase transition-all flex items-center justify-center gap-2"
             style={{ backgroundColor: accent, color: appBg }}
           >
@@ -636,30 +677,40 @@ export default function App() {
                   />
                 </div>
                 <label className="text-[8px] uppercase tracking-[0.2em] opacity-70 block mb-1">Secondary Font</label>
-                <div className="space-y-1 max-h-72 overflow-y-auto pr-2 border" style={{ borderColor: `${accent}55`, padding: "8px" }}>
-                  {fonts.map(font => {
-                    const isSelected = secondaryFontId === font.id;
-                    return (
-                      <button
-                        key={font.id}
-                        onClick={() => setSecondaryFontId(isSelected ? null : font.id)}
-                        className="w-full flex items-center gap-2 px-2 py-2 text-left text-[11px] border transition-all mb-1 last:mb-0"
-                        style={{
-                          borderColor: isSelected ? accent : `${accent}55`,
-                          backgroundColor: isSelected ? accent : "transparent",
-                          color: isSelected ? appBg : accent
-                        }}
-                      >
-                        <span className="truncate flex-1">{font.name}</span>
-                        <span className="text-[7px] font-black tracking-tighter px-1 border leading-tight" style={{ borderColor: isSelected ? appBg : `${accent}99`, color: isSelected ? appBg : `${accent}dd` }}>
-                          {font.source || "SYSTEM"}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-                {!secondaryFont && (
-                  <p className="text-[10px] opacity-70 leading-tight">Select a font above to pair with your primary specimens.</p>
+                {secondaryFont ? (
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => {
+                        setAddFontsContext("secondary");
+                        setAddFontsTab(fonts.length > 0 ? "loaded" : "google");
+                        setShowAddFonts(true);
+                      }}
+                      className="flex-1 py-3 text-[10px] uppercase border tracking-widest font-bold transition-all hover:bg-white/5 truncate"
+                      style={{ borderColor: accent, color: accent }}
+                    >
+                      {secondaryFont.name}
+                    </button>
+                    <button
+                      onClick={() => setSecondaryFontId(null)}
+                      className="p-2 opacity-60 hover:opacity-100 border"
+                      style={{ borderColor: accent, color: accent }}
+                      aria-label="Clear secondary font"
+                    >
+                      <X size={12} />
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setAddFontsContext("secondary");
+                      setAddFontsTab(fonts.length > 0 ? "loaded" : "google");
+                      setShowAddFonts(true);
+                    }}
+                    className="w-full py-3 text-[10px] uppercase border tracking-widest font-bold transition-all hover:bg-white/5"
+                    style={{ borderColor: accent, color: accent }}
+                  >
+                    Select a Font
+                  </button>
                 )}
                 <TypographyControls
                   title="Secondary Typography"
@@ -823,7 +874,7 @@ export default function App() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-8 bg-black/60 backdrop-blur-sm modal-overlay"
-            onClick={() => setShowAddFonts(false)}
+            onClick={() => { setShowAddFonts(false); setAddFontsContext("add"); }}
           >
             <motion.div
               initial={{ scale: 0.95, y: 20 }}
@@ -834,11 +885,12 @@ export default function App() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="px-6 pt-6 pb-0 flex justify-between items-start color-transition">
-                <h2 className="text-xl font-bold uppercase tracking-tight" style={{ color: accent }}>Add Fonts</h2>
-                <button onClick={() => setShowAddFonts(false)} className="w-10 h-10 flex items-center justify-center text-2xl opacity-70 hover:opacity-100 -mt-2 -mr-2" style={{ color: accent }}>×</button>
+                <h2 className="text-xl font-bold uppercase tracking-tight" style={{ color: accent }}>{addFontsContext === "secondary" ? "Select Secondary Font" : "Add Fonts"}</h2>
+                <button onClick={() => { setShowAddFonts(false); setAddFontsContext("add"); }} className="w-10 h-10 flex items-center justify-center text-2xl opacity-70 hover:opacity-100 -mt-2 -mr-2" style={{ color: accent }}>×</button>
               </div>
               <div className="flex border-b mt-4" style={{ borderColor: `${accent}55` }}>
                 {[
+                  ...(addFontsContext === "secondary" && fonts.length > 0 ? [{ id: "loaded", label: "Loaded" }] : []),
                   { id: "google", label: "Google Fonts" },
                   ...(supportsLocalFonts ? [{ id: "installed", label: "Installed" }] : []),
                   { id: "upload", label: "Upload" }
@@ -860,6 +912,35 @@ export default function App() {
                   </button>
                 ))}
               </div>
+              {addFontsTab === "loaded" && addFontsContext === "secondary" && (
+                <div className="flex-1 overflow-y-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {fonts.map(font => {
+                    const isSelected = secondaryFontId === font.id;
+                    return (
+                      <button
+                        key={font.id}
+                        onClick={() => {
+                          setSecondaryFontId(font.id);
+                          setShowAddFonts(false);
+                          setAddFontsContext("add");
+                        }}
+                        className="group p-4 border text-left transition-all hover:scale-[1.02] active:scale-[0.98] flex flex-col justify-between"
+                        style={{
+                          borderColor: isSelected ? accent : `${accent}66`,
+                          backgroundColor: isSelected ? accent : `${accent}38`,
+                          color: isSelected ? appBg : accent,
+                          fontFamily: font.family
+                        }}
+                      >
+                        <div>
+                          <div className="text-sm font-medium mb-1 truncate">{font.name}</div>
+                          <div className="text-[10px] uppercase tracking-widest font-bold opacity-70">{font.source || "SYSTEM"}</div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
               {addFontsTab === "google" && (
                 <>
                   <div className="px-6 pt-6">
