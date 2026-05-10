@@ -551,7 +551,7 @@ export default function App() {
         ::-webkit-scrollbar-thumb { background: ${accent}77; border-radius: 10px; }
         input[type="range"] { accent-color: ${accent}; cursor: pointer; }
         input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-        input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 2px; }
+        input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 0; }
 
         .color-transition {
             transition: background-color 0.15s ease-out, color 0.15s ease-out, border-color 0.15s ease-out;
@@ -836,15 +836,15 @@ export default function App() {
               <div className="flex flex-col">
                 <span className="text-[8px] uppercase tracking-[0.2em] opacity-70 mb-2">Text</span>
                 <div className="flex gap-1.5 flex-wrap">
-                  <input type="color" value={displayTextColor} onChange={e => setDisplayTextColor(e.target.value)} onBlur={e => addColorToHistory(e.target.value, setTextColorHistory)} className="w-14 h-7 outline-none cursor-pointer border rounded-sm" style={{ borderColor: `${accent}55` }} />
-                  {textColorHistory.map((c, i) => <button key={i} onClick={() => setDisplayTextColor(c)} className="w-7 h-7 rounded-sm border color-transition" style={{ backgroundColor: c, borderColor: `${accent}55` }} />)}
+                  <input type="color" value={displayTextColor} onChange={e => setDisplayTextColor(e.target.value)} onBlur={e => addColorToHistory(e.target.value, setTextColorHistory)} className="w-14 h-7 outline-none cursor-pointer border rounded-sm" style={{ borderColor: accent }} />
+                  {textColorHistory.map((c, i) => <button key={i} onClick={() => setDisplayTextColor(c)} className="w-7 h-7 rounded-sm border color-transition" style={{ backgroundColor: c, borderColor: accent }} />)}
                 </div>
               </div>
               <div className="flex flex-col">
                 <span className="text-[8px] uppercase tracking-[0.2em] opacity-70 mb-2">Background</span>
                 <div className="flex gap-1.5 flex-wrap">
-                  <input type="color" value={displayBgColor} onChange={e => setDisplayBgColor(e.target.value)} onBlur={e => addColorToHistory(e.target.value, setBgColorHistory)} className="w-14 h-7 outline-none cursor-pointer border rounded-sm" style={{ borderColor: `${accent}55` }} />
-                  {bgColorHistory.map((c, i) => <button key={i} onClick={() => setDisplayBgColor(c)} className="w-7 h-7 rounded-sm border color-transition" style={{ backgroundColor: c, borderColor: `${accent}55` }} />)}
+                  <input type="color" value={displayBgColor} onChange={e => setDisplayBgColor(e.target.value)} onBlur={e => addColorToHistory(e.target.value, setBgColorHistory)} className="w-14 h-7 outline-none cursor-pointer border rounded-sm" style={{ borderColor: accent }} />
+                  {bgColorHistory.map((c, i) => <button key={i} onClick={() => setDisplayBgColor(c)} className="w-7 h-7 rounded-sm border color-transition" style={{ backgroundColor: c, borderColor: accent }} />)}
                 </div>
               </div>
             </div>
