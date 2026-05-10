@@ -163,15 +163,18 @@ const EditableValue = ({ value, suffix = "", onSave, accentColor }) => {
     </button>
   );
 };
-const TitleLetter = ({ char, accent, appBg }) => {
+const TitleLetter = ({ char, href, accent, appBg }) => {
   const [hovered, setHovered] = useState(false);
   return (
-    <motion.span
+    <motion.a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       animate={{ y: hovered ? 3 : 0, scale: hovered ? 0.96 : 1 }}
       transition={{ type: "spring", stiffness: 700, damping: 28 }}
-      className="w-11 h-11 rounded-full border-2 flex items-center justify-center text-2xl cursor-pointer select-none"
+      className="w-11 h-11 rounded-full border-2 flex items-center justify-center text-2xl cursor-pointer select-none no-underline"
       style={{
         borderColor: accent,
         backgroundColor: hovered ? accent : "transparent",
@@ -185,7 +188,7 @@ const TitleLetter = ({ char, accent, appBg }) => {
       }}
     >
       {char}
-    </motion.span>
+    </motion.a>
   );
 };
 const FontRow = ({ font, accent, appBg, removeFont, getFontVariant, setFontVariants }) => (
@@ -604,13 +607,26 @@ export default function App() {
         <div className="p-6 border-b color-transition" style={{ borderColor: `${accent}66` }}>
           <h1 aria-label="Type Sampler" style={{ color: accent, fontFamily: "'Cutive', serif" }}>
             <span className="flex">
-              {["T", "Y", "P", "E"].map((c, i) => (
-                <TitleLetter key={i} char={c} accent={accent} appBg={appBg} />
+              {[
+                { char: "T", href: "https://abcdinamo.com/" },
+                { char: "Y", href: "https://lineto.com/typefaces" },
+                { char: "P", href: "https://pangrampangram.com/" },
+                { char: "E", href: "https://commercialtype.com/catalog" }
+              ].map((l, i) => (
+                <TitleLetter key={i} char={l.char} href={l.href} accent={accent} appBg={appBg} />
               ))}
             </span>
             <span className="flex -mt-px">
-              {["S", "A", "M", "P", "L", "E", "R"].map((c, i) => (
-                <TitleLetter key={i} char={c} accent={accent} appBg={appBg} />
+              {[
+                { char: "S", href: "https://klim.co.nz/fonts/" },
+                { char: "A", href: "https://okaytype.com/" },
+                { char: "M", href: "https://www.hvdfonts.com/fonts" },
+                { char: "P", href: "https://a2-type.co.uk/" },
+                { char: "L", href: "https://processtypefoundry.com/fonts/" },
+                { char: "E", href: "https://www.typotheque.com/fonts" },
+                { char: "R", href: "https://www.grillitype.com/" }
+              ].map((l, i) => (
+                <TitleLetter key={i} char={l.char} href={l.href} accent={accent} appBg={appBg} />
               ))}
             </span>
           </h1>
