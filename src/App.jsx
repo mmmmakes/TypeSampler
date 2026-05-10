@@ -665,7 +665,7 @@ export default function App() {
                   className="overflow-hidden pt-2"
                 >
                   <label className="text-[8px] uppercase tracking-[0.2em] opacity-70 mb-3 block">Misfits</label>
-                  <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto pr-2 border" style={{ borderColor: `${accent}55`, padding: "8px" }}>
+                  <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-2 border" style={{ borderColor: `${accent}55`, padding: "8px" }}>
                     {misfits.map(font => (
                       <button
                         key={font.id}
@@ -884,6 +884,7 @@ export default function App() {
                     className="flex items-center specimen-text"
                     style={{
                       ...staticPadding,
+                      paddingBottom: secondaryEnabled && secondaryFont ? "12px" : undefined,
                       fontFamily: font.family,
                       fontSize: `${fontSize}px`,
                       fontWeight: variant.weight,
@@ -901,10 +902,10 @@ export default function App() {
                   </div>
                   {secondaryEnabled && secondaryFont && (
                     <div
-                      className="flex items-center specimen-text border-t"
+                      className="flex items-center specimen-text"
                       style={{
                         ...staticPadding,
-                        borderColor: `${accent}55`,
+                        paddingTop: "12px",
                         fontFamily: secondaryFont.family,
                         fontSize: `${secondaryFontSize}px`,
                         fontWeight: getFontVariant(secondaryFont.id).weight,
