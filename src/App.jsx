@@ -881,11 +881,13 @@ export default function App() {
                   </div>
 
                   <div
-                    className="flex items-center specimen-text"
+                    className={`specimen-text ${secondaryEnabled && secondaryFont ? "" : "flex items-center"}`}
                     style={{
-                      ...staticPadding,
-                      paddingBottom: secondaryEnabled && secondaryFont ? 0 : undefined,
-                      minHeight: secondaryEnabled && secondaryFont ? 0 : staticPadding.minHeight,
+                      paddingTop: "36px",
+                      paddingRight: "24px",
+                      paddingBottom: secondaryEnabled && secondaryFont ? 0 : "36px",
+                      paddingLeft: "24px",
+                      minHeight: secondaryEnabled && secondaryFont ? 0 : "100px",
                       fontFamily: font.family,
                       fontSize: `${fontSize}px`,
                       fontWeight: variant.weight,
@@ -903,10 +905,12 @@ export default function App() {
                   </div>
                   {secondaryEnabled && secondaryFont && (
                     <div
-                      className="flex items-center specimen-text"
+                      className="specimen-text"
                       style={{
-                        ...staticPadding,
                         paddingTop: 0,
+                        paddingRight: "24px",
+                        paddingBottom: "36px",
+                        paddingLeft: "24px",
                         marginTop: "20px",
                         minHeight: 0,
                         fontFamily: secondaryFont.family,
