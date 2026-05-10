@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useMemo } from "react";
-import { motion, AnimatePresence, Reorder, useDragControls } from "framer-motion";
-import { RotateCcw, X, GripVertical } from "lucide-react";
+import { motion, AnimatePresence, Reorder } from "framer-motion";
+import { RotateCcw, X } from "lucide-react";
 /**
  * Type Sampler Tool
  * Focuses on professional typography specimens with a clean PDF export workflow.
@@ -153,59 +153,45 @@ const EditableValue = ({ value, suffix = "", onSave, accentColor }) => {
     </button>
   );
 };
-const FontRow = ({ font, accent, appBg, removeFont, getFontVariant, setFontVariants }) => {
-  const dragControls = useDragControls();
-  return (
-    <Reorder.Item
-      value={font}
-      dragListener={false}
-      dragControls={dragControls}
-      className="flex items-start gap-2 border-b last:border-0 pb-3 mb-2 color-transition"
-      style={{ borderColor: `${accent}44`, backgroundColor: appBg }}
-    >
-      <button
-        onPointerDown={(e) => dragControls.start(e)}
-        className="opacity-50 hover:opacity-100 cursor-grab active:cursor-grabbing touch-none p-1 -ml-1 mt-0.5"
-        aria-label="Drag to reorder"
-      >
-        <GripVertical size={14} />
-      </button>
-      <div className="flex flex-col flex-1 min-w-0">
-        <div className="flex justify-between items-start mb-1">
-          <div className="flex flex-wrap items-center gap-2 max-w-[260px]">
-            <span className="text-[11px] font-medium truncate">{font.name}</span>
-            <span className="text-[7px] font-black tracking-tighter px-1 border leading-tight" style={{ borderColor: `${accent}99`, color: `${accent}dd` }}>
-              {font.source || "SYSTEM"}
-            </span>
-          </div>
-          <button onClick={() => removeFont(font.id)} className="opacity-60 hover:opacity-100 p-1 -mr-1">
-            <X size={12} />
-          </button>
-        </div>
-        {font.hasVariants && (
-          <div className="grid grid-cols-2 gap-1 mt-1">
-            <select
-              className="bg-transparent text-[10px] border px-1 py-1 outline-none"
-              style={{ borderColor: `${accent}55` }}
-              value={getFontVariant(font.id).weight}
-              onChange={(e) => setFontVariants(v => ({ ...v, [font.id]: { ...getFontVariant(font.id), weight: Number(e.target.value) } }))}
-            >
-              {font.availableWeights.map(w => <option key={w} value={w}>{w}</option>)}
-            </select>
-            <select
-              className="bg-transparent text-[10px] border px-1 py-1 outline-none"
-              style={{ borderColor: `${accent}55` }}
-              value={getFontVariant(font.id).style}
-              onChange={(e) => setFontVariants(v => ({ ...v, [font.id]: { ...getFontVariant(font.id), style: e.target.value } }))}
-            >
-              {font.availableStyles.map(s => <option key={s} value={s}>{s}</option>)}
-            </select>
-          </div>
-        )}
+const FontRow = ({ font, accent, appBg, removeFont, getFontVariant, setFontVariants }) => (
+  <Reorder.Item
+    value={font}
+    className="flex flex-col border-b last:border-0 pb-3 mb-2 color-transition cursor-grab active:cursor-grabbing"
+    style={{ borderColor: `${accent}44`, backgroundColor: appBg }}
+  >
+    <div className="flex justify-between items-start mb-1">
+      <div className="flex flex-wrap items-center gap-2 max-w-[280px]">
+        <span className="text-[11px] font-medium truncate">{font.name}</span>
+        <span className="text-[7px] font-black tracking-tighter px-1 border leading-tight" style={{ borderColor: `${accent}99`, color: `${accent}dd` }}>
+          {font.source || "SYSTEM"}
+        </span>
       </div>
-    </Reorder.Item>
-  );
-};
+      <button onClick={() => removeFont(font.id)} className="opacity-60 hover:opacity-100 p-1 -mr-1 cursor-pointer">
+        <X size={12} />
+      </button>
+    </div>
+    {font.hasVariants && (
+      <div className="grid grid-cols-2 gap-1 mt-1">
+        <select
+          className="bg-transparent text-[10px] border px-1 py-1 outline-none cursor-pointer"
+          style={{ borderColor: `${accent}55` }}
+          value={getFontVariant(font.id).weight}
+          onChange={(e) => setFontVariants(v => ({ ...v, [font.id]: { ...getFontVariant(font.id), weight: Number(e.target.value) } }))}
+        >
+          {font.availableWeights.map(w => <option key={w} value={w}>{w}</option>)}
+        </select>
+        <select
+          className="bg-transparent text-[10px] border px-1 py-1 outline-none cursor-pointer"
+          style={{ borderColor: `${accent}55` }}
+          value={getFontVariant(font.id).style}
+          onChange={(e) => setFontVariants(v => ({ ...v, [font.id]: { ...getFontVariant(font.id), style: e.target.value } }))}
+        >
+          {font.availableStyles.map(s => <option key={s} value={s}>{s}</option>)}
+        </select>
+      </div>
+    )}
+  </Reorder.Item>
+);
 const TypographyControls = ({
   title,
   fontSize, setFontSize,
@@ -537,6 +523,7 @@ export default function App() {
         </div>
         {/* Font Management */}
         <div className="p-6 border-b space-y-6 color-transition" style={{ borderColor: `${accent}66` }}>
+          <label className="text-[10px] uppercase tracking-widest font-bold block mb-1">Fonts</label>
           <button
             onClick={() => { setAddFontsTab("google"); setShowAddFonts(true); }}
             className="w-full py-3 text-[10px] font-bold uppercase transition-all flex items-center justify-center gap-2"
@@ -575,8 +562,7 @@ export default function App() {
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
-                  className="overflow-hidden pt-2 border-t"
-                  style={{ borderColor: `${accent}55` }}
+                  className="overflow-hidden pt-2"
                 >
                   <label className="text-[8px] uppercase tracking-[0.2em] opacity-70 mb-3 block">Misfits</label>
                   <div className="flex flex-wrap gap-1.5">
