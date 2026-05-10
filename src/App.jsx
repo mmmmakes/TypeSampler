@@ -685,15 +685,15 @@ export default function App() {
                         setAddFontsTab(fonts.length > 0 ? "loaded" : "google");
                         setShowAddFonts(true);
                       }}
-                      className="flex-1 py-3 text-[10px] uppercase border tracking-widest font-bold transition-all hover:bg-white/5 truncate"
-                      style={{ borderColor: accent, color: accent }}
+                      className="flex-1 py-3 text-[10px] font-bold uppercase transition-all flex items-center justify-center gap-2 truncate"
+                      style={{ backgroundColor: accent, color: appBg }}
                     >
                       {secondaryFont.name}
                     </button>
                     <button
                       onClick={() => setSecondaryFontId(null)}
-                      className="p-2 opacity-60 hover:opacity-100 border"
-                      style={{ borderColor: accent, color: accent }}
+                      className="p-2 opacity-80 hover:opacity-100"
+                      style={{ backgroundColor: accent, color: appBg }}
                       aria-label="Clear secondary font"
                     >
                       <X size={12} />
@@ -706,8 +706,8 @@ export default function App() {
                       setAddFontsTab(fonts.length > 0 ? "loaded" : "google");
                       setShowAddFonts(true);
                     }}
-                    className="w-full py-3 text-[10px] uppercase border tracking-widest font-bold transition-all hover:bg-white/5"
-                    style={{ borderColor: accent, color: accent }}
+                    className="w-full py-3 text-[10px] font-bold uppercase transition-all flex items-center justify-center gap-2"
+                    style={{ backgroundColor: accent, color: appBg }}
                   >
                     Select a Font
                   </button>
@@ -916,9 +916,11 @@ export default function App() {
                 <div className="flex-1 overflow-y-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                   {fonts.map(font => {
                     const isSelected = secondaryFontId === font.id;
+                    const weightCount = font.availableWeights?.length || 1;
                     return (
                       <button
                         key={font.id}
+                        disabled={isSelected}
                         onClick={() => {
                           setSecondaryFontId(font.id);
                           setShowAddFonts(false);
@@ -926,15 +928,15 @@ export default function App() {
                         }}
                         className="group p-4 border text-left transition-all hover:scale-[1.02] active:scale-[0.98] flex flex-col justify-between"
                         style={{
-                          borderColor: isSelected ? accent : `${accent}66`,
-                          backgroundColor: isSelected ? accent : `${accent}38`,
-                          color: isSelected ? appBg : accent,
+                          borderColor: isSelected ? `${accent}44` : `${accent}66`,
+                          opacity: isSelected ? 0.4 : 1,
+                          backgroundColor: isSelected ? "transparent" : `${accent}38`,
                           fontFamily: font.family
                         }}
                       >
                         <div>
                           <div className="text-sm font-medium mb-1 truncate">{font.name}</div>
-                          <div className="text-[10px] uppercase tracking-widest font-bold opacity-70">{font.source || "SYSTEM"}</div>
+                          <div className="text-[10px] uppercase tracking-widest font-bold opacity-70">{weightCount} weight{weightCount === 1 ? "" : "s"}</div>
                         </div>
                       </button>
                     );
