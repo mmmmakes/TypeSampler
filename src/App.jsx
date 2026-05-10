@@ -885,6 +885,7 @@ export default function App() {
                     style={{
                       ...staticPadding,
                       paddingBottom: secondaryEnabled && secondaryFont ? 0 : undefined,
+                      minHeight: secondaryEnabled && secondaryFont ? 0 : staticPadding.minHeight,
                       fontFamily: font.family,
                       fontSize: `${fontSize}px`,
                       fontWeight: variant.weight,
@@ -907,6 +908,7 @@ export default function App() {
                         ...staticPadding,
                         paddingTop: 0,
                         marginTop: "20px",
+                        minHeight: 0,
                         fontFamily: secondaryFont.family,
                         fontSize: `${secondaryFontSize}px`,
                         fontWeight: getFontVariant(secondaryFont.id).weight,
