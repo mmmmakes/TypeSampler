@@ -213,20 +213,20 @@ const TypographyControls = ({
       </button>
     </div>
 
-    <div className="flex justify-between text-[11px] mb-1">
-      <span>Size</span>
+    <div className="flex justify-between items-center mb-1">
+      <span className="text-[8px] uppercase tracking-[0.2em] opacity-70">Size</span>
       <EditableValue value={fontSize} suffix="px" onSave={setFontSize} accentColor={accent} />
     </div>
     <input type="range" min="8" max="240" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} className="w-full" />
 
-    <div className="flex justify-between text-[11px] mb-1">
-      <span>Spacing</span>
+    <div className="flex justify-between items-center mb-1">
+      <span className="text-[8px] uppercase tracking-[0.2em] opacity-70">Spacing</span>
       <EditableValue value={letterSpacing} suffix="px" onSave={setLetterSpacing} accentColor={accent} />
     </div>
     <input type="range" min="-10" max="100" value={letterSpacing} onChange={e => setLetterSpacing(Number(e.target.value))} className="w-full" />
 
-    <div className="flex justify-between text-[11px] mb-1">
-      <span>Leading</span>
+    <div className="flex justify-between items-center mb-1">
+      <span className="text-[8px] uppercase tracking-[0.2em] opacity-70">Leading</span>
       <EditableValue value={leading} onSave={setLeading} accentColor={accent} />
     </div>
     <input type="range" min="0.5" max="3" step="0.01" value={leading} onChange={e => setLeading(Number(e.target.value))} className="w-full" />
@@ -565,7 +565,7 @@ export default function App() {
                   className="overflow-hidden pt-2"
                 >
                   <label className="text-[8px] uppercase tracking-[0.2em] opacity-70 mb-3 block">Misfits</label>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto pr-2 border" style={{ borderColor: `${accent}55`, padding: "8px" }}>
                     {misfits.map(font => (
                       <button
                         key={font.id}
@@ -622,7 +622,7 @@ export default function App() {
               <>
                 <div>
                   <div className="flex justify-between items-end mb-2">
-                    <span className="text-[10px] uppercase tracking-widest font-bold">Secondary Sample Text</span>
+                    <span className="text-[8px] uppercase tracking-[0.2em] opacity-70">Secondary Sample Text</span>
                     <button
                       onClick={() => setSecondarySample(PANGRAMS[Math.floor(Math.random() * PANGRAMS.length)])}
                       className="text-[10px] underline hover:opacity-90 lowercase"
@@ -637,7 +637,7 @@ export default function App() {
                     style={{ borderColor: `${accent}77`, color: accent, "--tw-ring-color": accent }}
                   />
                 </div>
-                <label className="text-[10px] uppercase tracking-widest font-bold block mb-1">Secondary Font</label>
+                <label className="text-[8px] uppercase tracking-[0.2em] opacity-70 block mb-1">Secondary Font</label>
                 <div className="space-y-1 max-h-72 overflow-y-auto pr-2 border" style={{ borderColor: `${accent}55`, padding: "8px" }}>
                   {fonts.map(font => {
                     const isSelected = secondaryFontId === font.id;
@@ -697,14 +697,14 @@ export default function App() {
 
             <div className="space-y-6">
               <div className="flex flex-col">
-                <span className="text-[10px] uppercase tracking-widest font-bold opacity-80 mb-2">Text</span>
+                <span className="text-[8px] uppercase tracking-[0.2em] opacity-70 mb-2">Text</span>
                 <div className="flex gap-1.5 flex-wrap">
                   <input type="color" value={displayTextColor} onChange={e => setDisplayTextColor(e.target.value)} onBlur={e => addColorToHistory(e.target.value, setTextColorHistory)} className="w-14 h-7 outline-none cursor-pointer border rounded-sm" style={{ borderColor: `${accent}55` }} />
                   {textColorHistory.map((c, i) => <button key={i} onClick={() => setDisplayTextColor(c)} className="w-7 h-7 rounded-sm border color-transition" style={{ backgroundColor: c, borderColor: `${accent}55` }} />)}
                 </div>
               </div>
               <div className="flex flex-col">
-                <span className="text-[10px] uppercase tracking-widest font-bold opacity-80 mb-2">Background</span>
+                <span className="text-[8px] uppercase tracking-[0.2em] opacity-70 mb-2">Background</span>
                 <div className="flex gap-1.5 flex-wrap">
                   <input type="color" value={displayBgColor} onChange={e => setDisplayBgColor(e.target.value)} onBlur={e => addColorToHistory(e.target.value, setBgColorHistory)} className="w-14 h-7 outline-none cursor-pointer border rounded-sm" style={{ borderColor: `${accent}55` }} />
                   {bgColorHistory.map((c, i) => <button key={i} onClick={() => setDisplayBgColor(c)} className="w-7 h-7 rounded-sm border color-transition" style={{ backgroundColor: c, borderColor: `${accent}55` }} />)}
