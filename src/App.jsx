@@ -223,6 +223,11 @@ export default function App() {
   const [monochrome, setMonochrome] = useState(false);
   const [googleFontInput, setGoogleFontInput] = useState("");
   const [showFontBrowser, setShowFontBrowser] = useState(false);
+  const [showInstalledBrowser, setShowInstalledBrowser] = useState(false);
+  const [installedFontsList, setInstalledFontsList] = useState(null);
+  const [installedFontsSearch, setInstalledFontsSearch] = useState("");
+  const [installedFontsError, setInstalledFontsError] = useState(null);
+  const [installedFontsLoading, setInstalledFontsLoading] = useState(false);
   const [displayTextColor, setDisplayTextColor] = useState("#202020");
   const [displayBgColor, setDisplayBgColor] = useState("#ece9e2");
   const [textColorHistory, setTextColorHistory] = useState(["#202020", "#ef4423", "#000000", "#ffffff", "#f4b2a6"]);
@@ -312,6 +317,56 @@ export default function App() {
     }
     event.target.value = "";
   };
+  const supportsLocalFonts = typeof window !== "undefined" && "queryLocalFonts" in window;
+  const openInstalledFontsBrowser = async () => {
+    setShowInstalledBrowser(true);
+    if (installedFontsList) return;
+    setInstalledFontsLoading(true);
+    setInstalledFontsError(null);
+    try {
+      const data = await window.queryLocalFonts();
+      const map = new Map();
+      for (const fd of data) {
+        const variant = inferLocalFontVariant(fd.style || fd.fullName || fd.family);
+        if (!map.has(fd.family)) {
+          map.set(fd.family, { family: fd.family, weights: new Set(), styles: new Set() });
+        }
+        const entry = map.get(fd.family);
+        entry.weights.add(variant.weight);
+        entry.styles.add(variant.style);
+      }
+      const families = [...map.values()]
+        .map(e => ({
+          family: e.family,
+          availableWeights: [...e.weights].sort((a, b) => a - b),
+          availableStyles: [...e.styles]
+        }))
+        .sort((a, b) => a.family.localeCompare(b.family));
+      setInstalledFontsList(families);
+    } catch (e) {
+      setInstalledFontsError(e?.message || "Couldn't access installed fonts. Permission may have been denied.");
+    } finally {
+      setInstalledFontsLoading(false);
+    }
+  };
+  const addInstalledFont = (entry) => {
+    if (fonts.some(f => f.name.toLowerCase() === entry.family.toLowerCase())) return;
+    const id = "installed-" + Date.now() + "-" + Math.random().toString(36).slice(2);
+    const family = `'${entry.family.replace(/'/g, "\\'")}', sans-serif`;
+    setFonts(prev => [
+      ...prev,
+      {
+        id,
+        name: entry.family,
+        family,
+        source: "INSTALLED",
+        status: "ready",
+        hasVariants: entry.availableWeights.length > 1 || entry.availableStyles.length > 1,
+        availableWeights: entry.availableWeights,
+        availableStyles: entry.availableStyles
+      }
+    ]);
+  };
   const resetTypography = () => {
     setFontSize(INITIAL_STATE.fontSize);
     setLetterSpacing(INITIAL_STATE.letterSpacing);
@@ -356,6 +411,7 @@ export default function App() {
     window.print();
   };
   const filteredBrowserFonts = GOOGLE_FONTS.filter(f => f.toLowerCase().includes(fontBrowserSearch.toLowerCase()));
+  const filteredInstalledFonts = (installedFontsList || []).filter(f => f.family.toLowerCase().includes(installedFontsSearch.toLowerCase()));
   const staticPadding = {
     padding: `36px 24px`,
     minHeight: `100px`
@@ -459,6 +515,15 @@ export default function App() {
             Upload Local Fonts
           </button>
           <input ref={fileInputRef} type="file" multiple accept=".ttf,.otf,.woff,.woff2" onChange={handleLocalFontUpload} className="hidden" />
+          {supportsLocalFonts && (
+            <button
+              onClick={openInstalledFontsBrowser}
+              className="w-full py-3 text-[10px] uppercase border transition-all flex items-center justify-center gap-2 hover:bg-white/5"
+              style={{ borderColor: accent, color: accent }}
+            >
+              Browse Installed Fonts
+            </button>
+          )}
           {/* Active Fonts List */}
           <div className="space-y-6">
             <div>
@@ -810,6 +875,81 @@ export default function App() {
                     </button>
                   );
                 })}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {/* Installed Fonts Browser Modal */}
+      <AnimatePresence>
+        {showInstalledBrowser && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-8 bg-black/60 backdrop-blur-sm modal-overlay"
+            onClick={() => setShowInstalledBrowser(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+              className="w-full max-w-4xl h-full max-h-[80vh] overflow-hidden flex flex-col shadow-2xl border color-transition"
+              style={{ backgroundColor: appBg, borderColor: `${accent}77` }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6 border-b flex justify-between items-center color-transition" style={{ borderColor: `${accent}55` }}>
+                <div className="flex-1 mr-4">
+                  <h2 className="text-xl font-bold uppercase tracking-tight mb-4" style={{ color: accent }}>Browse Installed Fonts</h2>
+                  <input
+                    autoFocus
+                    placeholder="Search fonts..."
+                    value={installedFontsSearch}
+                    onChange={(e) => setInstalledFontsSearch(e.target.value)}
+                    className="w-full bg-transparent border px-4 py-3 text-sm outline-none rounded-none"
+                    style={{ borderColor: `${accent}77`, color: accent }}
+                  />
+                </div>
+                <button onClick={() => setShowInstalledBrowser(false)} className="w-10 h-10 flex items-center justify-center text-2xl opacity-70 hover:opacity-100" style={{ color: accent }}>×</button>
+              </div>
+              <div className="flex-1 overflow-y-auto p-6">
+                {installedFontsLoading && (
+                  <p className="text-[12px] opacity-70 uppercase tracking-widest">Requesting font access...</p>
+                )}
+                {installedFontsError && (
+                  <p className="text-[12px] opacity-90" style={{ color: accent }}>
+                    {installedFontsError}
+                  </p>
+                )}
+                {!installedFontsLoading && !installedFontsError && installedFontsList && installedFontsList.length === 0 && (
+                  <p className="text-[12px] opacity-70">No installed fonts were shared. Reopen and grant access to see your library.</p>
+                )}
+                {!installedFontsLoading && !installedFontsError && filteredInstalledFonts.length > 0 && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {filteredInstalledFonts.map((f) => {
+                      const isAdded = fonts.some(font => font.name.toLowerCase() === f.family.toLowerCase());
+                      return (
+                        <button
+                          key={f.family}
+                          disabled={isAdded}
+                          onClick={() => addInstalledFont(f)}
+                          className="group p-4 border text-left transition-all hover:scale-[1.02] active:scale-[0.98] flex flex-col justify-between"
+                          style={{
+                            borderColor: isAdded ? `${accent}44` : `${accent}66`,
+                            opacity: isAdded ? 0.4 : 1,
+                            backgroundColor: isAdded ? "transparent" : `${accent}38`,
+                            fontFamily: `'${f.family.replace(/'/g, "\\'")}', sans-serif`
+                          }}
+                        >
+                          <div>
+                            <div className="text-sm font-medium mb-1 truncate">{f.family}</div>
+                            <div className="text-[10px] opacity-60 uppercase tracking-widest">{f.availableWeights.length} weight{f.availableWeights.length === 1 ? "" : "s"}</div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </motion.div>
           </motion.div>
