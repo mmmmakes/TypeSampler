@@ -844,28 +844,30 @@ export default function App() {
                 <button
                   key={val}
                   onClick={() => toggleRatingFilter(val)}
-                  className="relative w-7 h-7 flex items-center justify-center text-[10px] font-bold transition-all hover:scale-110"
-                  style={{ color: accent }}
+                  className="w-7 h-7 flex items-center justify-center text-[10px] font-bold transition-all hover:scale-110 rounded-full border"
+                  style={{
+                    backgroundColor: active ? accent : "transparent",
+                    color: active ? appBg : accent,
+                    borderColor: accent
+                  }}
                   aria-pressed={active}
                 >
-                  {active && (
-                    <span className="absolute inset-0 rounded-full border" style={{ borderColor: accent }} />
-                  )}
-                  <span className={active ? "opacity-100" : "opacity-40"}>{val}</span>
+                  {val}
                 </button>
               );
             })}
             <button
               onClick={() => toggleRatingFilter(null)}
-              className="relative w-7 h-7 flex items-center justify-center text-[10px] font-bold transition-all hover:scale-110"
-              style={{ color: accent }}
+              className="w-7 h-7 flex items-center justify-center text-[10px] font-bold transition-all hover:scale-110 rounded-full border"
+              style={{
+                backgroundColor: activeRatingFilters.has(null) ? accent : "transparent",
+                color: activeRatingFilters.has(null) ? appBg : accent,
+                borderColor: accent
+              }}
               aria-pressed={activeRatingFilters.has(null)}
               aria-label="Unrated"
             >
-              {activeRatingFilters.has(null) && (
-                <span className="absolute inset-0 rounded-full border" style={{ borderColor: accent }} />
-              )}
-              <span className={activeRatingFilters.has(null) ? "opacity-100" : "opacity-40"}>—</span>
+              —
             </button>
           </div>
         </div>
