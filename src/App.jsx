@@ -546,13 +546,22 @@ export default function App() {
       {/* Sidebar */}
       <aside className="w-[390px] h-full border-r flex flex-col overflow-y-auto color-transition" style={{ borderColor: `${accent}66` }}>
         <div className="p-6 border-b color-transition" style={{ borderColor: `${accent}66` }}>
-          <h1 className="text-5xl font-black tracking-tighter leading-none" style={{ color: accent }}>
-            Type <br /> Sampler
+          <h1 aria-label="Type Sampler" style={{ color: accent, fontFamily: "'Cutive', serif" }}>
+            <span className="flex gap-1 mb-1">
+              {["T", "Y", "P", "E"].map((c, i) => (
+                <span key={i} className="w-10 h-10 rounded-full border-2 flex items-center justify-center text-xl leading-none" style={{ borderColor: accent }}>{c}</span>
+              ))}
+            </span>
+            <span className="flex gap-1">
+              {["S", "A", "M", "P", "L", "E", "R"].map((c, i) => (
+                <span key={i} className="w-10 h-10 rounded-full border-2 flex items-center justify-center text-xl leading-none" style={{ borderColor: accent }}>{c}</span>
+              ))}
+            </span>
           </h1>
         </div>
         {/* Input Area */}
         <div className="p-6 border-b color-transition" style={{ borderColor: `${accent}66` }}>
-          <div className="flex justify-between items-end mb-2">
+          <div className="flex justify-between items-end mb-6">
             <span className="text-[10px] uppercase tracking-widest font-bold">Sample Text</span>
             <button
               onClick={() => setSample(PANGRAMS[Math.floor(Math.random() * PANGRAMS.length)])}
@@ -631,7 +640,7 @@ export default function App() {
           </div>
         </div>
         {/* Typography */}
-        <div className="p-6 border-b color-transition" style={{ borderColor: `${accent}66` }}>
+        <div className="p-6 pb-10 border-b color-transition" style={{ borderColor: `${accent}66` }}>
           <TypographyControls
             title="Typography"
             fontSize={fontSize} setFontSize={setFontSize}
