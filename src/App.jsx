@@ -389,7 +389,7 @@ export default function App() {
           <div className="space-y-6">
             <div>
               <label className="text-[8px] uppercase tracking-[0.2em] opacity-50 mb-3 block">Active Fonts</label>
-              <div className="space-y-1">
+              <div className="space-y-1 max-h-72 overflow-y-auto pr-2 border" style={{ borderColor: `${accent}22`, padding: "8px" }}>
                 {fonts.map(font => (
                   <div key={font.id} className="flex flex-col border-b last:border-0 pb-3 mb-2 color-transition" style={{ borderColor: `${accent}11` }}>
                     <div className="flex justify-between items-start mb-1">
