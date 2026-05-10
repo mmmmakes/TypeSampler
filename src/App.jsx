@@ -985,7 +985,7 @@ export default function App() {
       </aside>
       {/* Main Preview Area */}
       <section className="flex-1 overflow-y-auto p-4 md:p-12 pb-[72px] md:pb-12 color-transition relative" style={{ backgroundColor: appBg }}>
-        <div ref={samplesRef} className="max-w-4xl mx-auto space-y-8 pb-32">
+        <div ref={samplesRef} className="space-y-8 pb-32">
           <AnimatePresence mode="popLayout">
             {visibleFonts.map((font, idx) => {
               const variant = getFontVariant(font.id);
