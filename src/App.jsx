@@ -583,23 +583,21 @@ export default function App() {
             </AnimatePresence>
           </div>
         </div>
-        {/* Global Controls */}
-        <div className="p-6 space-y-8 pb-12">
-          {/* Typography Controls */}
-          <div>
-            <TypographyControls
-              title="Typography"
-              fontSize={fontSize} setFontSize={setFontSize}
-              letterSpacing={letterSpacing} setLetterSpacing={setLetterSpacing}
-              leading={leading} setLeading={setLeading}
-              selectedTransform={selectedTransform} setSelectedTransform={setSelectedTransform}
-              align={align} setAlign={setAlign}
-              onReset={resetTypography}
-              accent={accent} appBg={appBg}
-            />
-          </div>
-          {/* Secondary Type Section */}
-          <div className="pt-8 border-t space-y-4 color-transition" style={{ borderColor: `${accent}66` }}>
+        {/* Typography */}
+        <div className="p-6 border-b color-transition" style={{ borderColor: `${accent}66` }}>
+          <TypographyControls
+            title="Typography"
+            fontSize={fontSize} setFontSize={setFontSize}
+            letterSpacing={letterSpacing} setLetterSpacing={setLetterSpacing}
+            leading={leading} setLeading={setLeading}
+            selectedTransform={selectedTransform} setSelectedTransform={setSelectedTransform}
+            align={align} setAlign={setAlign}
+            onReset={resetTypography}
+            accent={accent} appBg={appBg}
+          />
+        </div>
+        {/* Secondary Type Section */}
+        <div className="p-6 border-b space-y-4 color-transition" style={{ borderColor: `${accent}66` }}>
             <div className="flex justify-between items-center">
               <label className="text-[10px] uppercase tracking-widest font-bold">Secondary Type</label>
               <button
@@ -676,8 +674,8 @@ export default function App() {
               </>
             )}
           </div>
-          {/* Color Section */}
-          <div className="pt-8 border-t space-y-6 color-transition" style={{ borderColor: `${accent}66` }}>
+        {/* Color Section */}
+        <div className="p-6 border-b space-y-6 color-transition" style={{ borderColor: `${accent}66` }}>
             <div className="flex justify-between items-end mb-1">
               <label className="text-[10px] uppercase tracking-widest font-bold">Color</label>
               <button
@@ -712,8 +710,8 @@ export default function App() {
               </div>
             </div>
           </div>
-          {/* Export / Print Section */}
-          <div className="pt-8 border-t space-y-4 color-transition" style={{ borderColor: `${accent}66` }}>
+        {/* Export / Print Section */}
+        <div className="p-6 pb-12 space-y-4 color-transition">
             <label className="text-[10px] uppercase tracking-widest font-bold block mb-1">Export</label>
             <div className="flex flex-col gap-1">
               <button
@@ -727,7 +725,6 @@ export default function App() {
             <p className="text-[10px] opacity-80 leading-tight pt-2">
               This tool was made by <a href="https://www.instagram.com/mireyareyy/" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-100 font-normal" style={{ color: accent }}>Mireya Lavender</a>
             </p>
-          </div>
         </div>
       </aside>
       {/* Main Preview Area */}
