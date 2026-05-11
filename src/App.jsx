@@ -289,14 +289,14 @@ const TypographyControls = ({
   </div>
 );
 export default function App() {
-  const [sample, setSample] = useState(INITIAL_STATE.sample);
+  const [sample, setSample] = useState(() => PANGRAMS[Math.floor(Math.random() * PANGRAMS.length)]);
   const [fontSize, setFontSize] = useState(INITIAL_STATE.fontSize);
   const [letterSpacing, setLetterSpacing] = useState(INITIAL_STATE.letterSpacing);
   const [leading, setLeading] = useState(INITIAL_STATE.leading);
   const [align, setAlign] = useState(INITIAL_STATE.align);
   const [selectedTransform, setSelectedTransform] = useState(INITIAL_STATE.selectedTransform);
   const [secondaryEnabled, setSecondaryEnabled] = useState(false);
-  const [secondarySample, setSecondarySample] = useState(INITIAL_STATE.sample);
+  const [secondarySample, setSecondarySample] = useState(() => LOREM_IPSUM[Math.floor(Math.random() * LOREM_IPSUM.length)]);
   const [secondaryFontId, setSecondaryFontId] = useState(null);
   const [secondaryFontSize, setSecondaryFontSize] = useState(INITIAL_STATE.fontSize);
   const [secondaryLetterSpacing, setSecondaryLetterSpacing] = useState(INITIAL_STATE.letterSpacing);
