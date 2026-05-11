@@ -637,6 +637,7 @@ export default function App() {
           }
           .modal-overlay { display: none !important; }
           .utility-bar { opacity: 1 !important; }
+          .utility-bar button { padding-top: 0 !important; }
         }
       `}</style>
       {/* Mobile title bar */}
