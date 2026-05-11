@@ -670,7 +670,7 @@ export default function App() {
       {/* Floating Adjust Fonts button (mobile only) */}
       <button
         onClick={() => setBottomSheetOpen(!bottomSheetOpen)}
-        className="md:hidden fixed bottom-6 right-6 z-50 px-6 py-3 text-[10px] uppercase tracking-widest font-bold transition-all"
+        className="md:hidden print:hidden fixed bottom-6 right-6 z-50 px-6 py-3 text-[10px] uppercase tracking-widest font-bold transition-all"
         style={{ backgroundColor: accent, color: appBg }}
         aria-label={bottomSheetOpen ? "Close settings" : "Open settings"}
       >
