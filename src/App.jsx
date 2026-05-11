@@ -6,6 +6,7 @@ import { RotateCcw, X } from "lucide-react";
  * Focuses on professional typography specimens with a clean PDF export workflow.
  */
 const PANGRAMS = [
+  "The quick brown fox jumps over the lazy dog.",
   "Quick nymph bugs vex fjord waltz.",
   "Waltz, bad nymph, for quick jigs vex.",
   "Glib jocks quiz nymph to vex dwarf.",
@@ -634,7 +635,8 @@ export default function App() {
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
           }
-          .utility-bar, .modal-overlay { display: none !important; }
+          .modal-overlay { display: none !important; }
+          .utility-bar { opacity: 1 !important; }
         }
       `}</style>
       {/* Mobile title bar */}
